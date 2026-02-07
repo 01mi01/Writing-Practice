@@ -5,6 +5,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 
 const authRoutes = require('./routes/auth.routes');
+const textRoutes = require('./routes/text.routes');
+const dashboardRoutes = require('./routes/dashboard.routes');
 
 dotenv.config();
 app.use(express.json());
@@ -30,6 +32,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/texts', textRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 const PORT = process.env.PORT || 3000;
 
