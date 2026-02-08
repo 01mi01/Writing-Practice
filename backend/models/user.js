@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
         as: "vocabulary",
       });
+      User.hasOne(models.UserPreference, {
+        foreignKey: "user_id",
+        as: "preferences",
+      });
     }
   }
 

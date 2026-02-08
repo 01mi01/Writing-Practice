@@ -8,6 +8,8 @@ const authRoutes = require('./routes/auth.routes');
 const textRoutes = require('./routes/text.routes');
 const dashboardRoutes = require('./routes/dashboard.routes');
 const vocabularyRoutes = require('./routes/vocabulary.routes');
+const preferencesRoutes = require('./routes/preferences.routes');
+const adminRoutes = require('./routes/admin.routes');
 
 dotenv.config();
 app.use(express.json());
@@ -36,6 +38,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/texts', textRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/vocabulary', vocabularyRoutes);
+app.use('/api/preferences', preferencesRoutes);
+app.use('/api/admin', adminRoutes);
 
 const PORT = process.env.PORT || 3000;
 
