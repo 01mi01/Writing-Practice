@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
         as: "texts",
       });
+      User.hasMany(models.Vocabulary, {
+        foreignKey: "user_id",
+        as: "vocabulary",
+      });
     }
   }
 
