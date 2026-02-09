@@ -1,5 +1,6 @@
 const { checkSpelling } = require("../utils/spellChecker");
 const { countConnectors } = require("../utils/connectorChecker");
+const { countVocabularyUsage } = require("../utils/vocabularyChecker");
 const { Text, TextType, Vocabulary } = require("../models");
 
 exports.getTexts = async (req, res) => {
@@ -76,6 +77,9 @@ exports.createText = async (req, res) => {
     // Check spelling (synchronous, excluding user vocabulary)
     const spellCheckResult = checkSpelling(content, vocabWords);
 
+    // Count vocabulary usage
+    const vocabUsage = countVocabularyUsage(content, vocabWords);
+
     const text = await Text.create({
       user_id: req.user.user_id,
       title,
@@ -85,6 +89,7 @@ exports.createText = async (req, res) => {
       spelling_errors: spellCheckResult.errorCount,
       basic_connectors_count: basicCount,
       advanced_connectors_count: advancedCount,
+      vocab_words_used: vocabUsage.vocabWordsUsed,
       created_at: new Date(),
       updated_at: new Date(),
     });
@@ -141,6 +146,10 @@ exports.updateText = async (req, res) => {
       // Check spelling (synchronous, excluding user vocabulary)
       spellCheckResult = checkSpelling(content, vocabWords);
       text.spelling_errors = spellCheckResult.errorCount;
+
+      // Count vocabulary usage
+      const vocabUsage = countVocabularyUsage(content, vocabWords);
+      text.vocab_words_used = vocabUsage.vocabWordsUsed;
     }
 
     if (text_type_id) text.text_type_id = text_type_id;
