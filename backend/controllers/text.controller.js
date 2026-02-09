@@ -1,5 +1,6 @@
-const { checkSpelling } = require('../utils/spellChecker');
-const { Text, TextType, Vocabulary } = require('../models');
+const { checkSpelling } = require("../utils/spellChecker");
+const { countConnectors } = require("../utils/connectorChecker");
+const { Text, TextType, Vocabulary } = require("../models");
 
 exports.getTexts = async (req, res) => {
   try {
@@ -8,44 +9,44 @@ exports.getTexts = async (req, res) => {
       include: [
         {
           model: TextType,
-          as: 'textType',
-          attributes: ['type_id', 'type_name']
-        }
+          as: "textType",
+          attributes: ["type_id", "type_name"],
+        },
       ],
-      order: [['created_at', 'DESC']]
+      order: [["created_at", "DESC"]],
     });
 
     res.json(texts);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error fetching texts' });
+    res.status(500).json({ error: "Error fetching texts" });
   }
 };
 
 exports.getText = async (req, res) => {
   try {
     const text = await Text.findOne({
-      where: { 
-        text_id: req.params.id, 
-        user_id: req.user.user_id 
+      where: {
+        text_id: req.params.id,
+        user_id: req.user.user_id,
       },
       include: [
         {
           model: TextType,
-          as: 'textType',
-          attributes: ['type_id', 'type_name']
-        }
-      ]
+          as: "textType",
+          attributes: ["type_id", "type_name"],
+        },
+      ],
     });
 
     if (!text) {
-      return res.status(404).json({ error: 'Text not found' });
+      return res.status(404).json({ error: "Text not found" });
     }
 
     res.json(text);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error fetching text' });
+    res.status(500).json({ error: "Error fetching text" });
   }
 };
 
@@ -54,18 +55,23 @@ exports.createText = async (req, res) => {
     const { title, content, text_type_id } = req.body;
 
     if (!title || !content || !text_type_id) {
-      return res.status(400).json({ error: 'Title, content, and text_type_id are required' });
+      return res
+        .status(400)
+        .json({ error: "Title, content, and text_type_id are required" });
     }
 
     const word_count = content.trim().split(/\s+/).length;
 
+    // Count connectors
+    const { basicCount, advancedCount } = countConnectors(content);
+
     // Fetch user's vocabulary
     const userVocab = await Vocabulary.findAll({
       where: { user_id: req.user.user_id },
-      attributes: ['word']
+      attributes: ["word"],
     });
-    
-    const vocabWords = userVocab.map(v => v.word);
+
+    const vocabWords = userVocab.map((v) => v.word);
 
     // Check spelling (synchronous, excluding user vocabulary)
     const spellCheckResult = checkSpelling(content, vocabWords);
@@ -77,20 +83,22 @@ exports.createText = async (req, res) => {
       text_type_id,
       word_count,
       spelling_errors: spellCheckResult.errorCount,
+      basic_connectors_count: basicCount,
+      advanced_connectors_count: advancedCount,
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
     });
 
     res.status(201).json({
       text,
       spell_check: {
         error_count: spellCheckResult.errorCount,
-        errors: spellCheckResult.errors
-      }
+        errors: spellCheckResult.errors,
+      },
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error creating text' });
+    res.status(500).json({ error: "Error creating text" });
   }
 };
 
@@ -99,37 +107,42 @@ exports.updateText = async (req, res) => {
     const { title, content, text_type_id } = req.body;
 
     const text = await Text.findOne({
-      where: { 
-        text_id: req.params.id, 
-        user_id: req.user.user_id 
-      }
+      where: {
+        text_id: req.params.id,
+        user_id: req.user.user_id,
+      },
     });
 
     if (!text) {
-      return res.status(404).json({ error: 'Text not found' });
+      return res.status(404).json({ error: "Text not found" });
     }
 
     if (title) text.title = title;
-    
+
     let spellCheckResult = null;
-    
+
     if (content) {
       text.content = content;
       text.word_count = content.trim().split(/\s+/).length;
-      
+
+      // Count connectors
+      const { basicCount, advancedCount } = countConnectors(content);
+      text.basic_connectors_count = basicCount;
+      text.advanced_connectors_count = advancedCount;
+
       // Fetch user's vocabulary
       const userVocab = await Vocabulary.findAll({
         where: { user_id: req.user.user_id },
-        attributes: ['word']
+        attributes: ["word"],
       });
-      
-      const vocabWords = userVocab.map(v => v.word);
-      
+
+      const vocabWords = userVocab.map((v) => v.word);
+
       // Check spelling (synchronous, excluding user vocabulary)
       spellCheckResult = checkSpelling(content, vocabWords);
       text.spelling_errors = spellCheckResult.errorCount;
     }
-    
+
     if (text_type_id) text.text_type_id = text_type_id;
 
     text.updated_at = new Date();
@@ -137,37 +150,39 @@ exports.updateText = async (req, res) => {
     await text.save();
 
     res.json({
-      message: 'Text updated successfully',
+      message: "Text updated successfully",
       text,
-      spell_check: spellCheckResult ? {
-        error_count: spellCheckResult.errorCount,
-        errors: spellCheckResult.errors
-      } : null
+      spell_check: spellCheckResult
+        ? {
+            error_count: spellCheckResult.errorCount,
+            errors: spellCheckResult.errors,
+          }
+        : null,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error updating text' });
+    res.status(500).json({ error: "Error updating text" });
   }
 };
 
 exports.deleteText = async (req, res) => {
   try {
     const text = await Text.findOne({
-      where: { 
-        text_id: req.params.id, 
-        user_id: req.user.user_id 
-      }
+      where: {
+        text_id: req.params.id,
+        user_id: req.user.user_id,
+      },
     });
 
     if (!text) {
-      return res.status(404).json({ error: 'Text not found' });
+      return res.status(404).json({ error: "Text not found" });
     }
 
     await text.destroy();
 
-    res.json({ message: 'Text deleted successfully' });
+    res.json({ message: "Text deleted successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error deleting text' });
+    res.status(500).json({ error: "Error deleting text" });
   }
 };
