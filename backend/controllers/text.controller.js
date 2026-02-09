@@ -1,4 +1,5 @@
-const { Text, TextType } = require('../models');
+const { checkSpelling } = require('../utils/spellChecker');
+const { Text, TextType, Vocabulary } = require('../models');
 
 exports.getTexts = async (req, res) => {
   try {
@@ -58,17 +59,35 @@ exports.createText = async (req, res) => {
 
     const word_count = content.trim().split(/\s+/).length;
 
+    // Fetch user's vocabulary
+    const userVocab = await Vocabulary.findAll({
+      where: { user_id: req.user.user_id },
+      attributes: ['word']
+    });
+    
+    const vocabWords = userVocab.map(v => v.word);
+
+    // Check spelling (synchronous, excluding user vocabulary)
+    const spellCheckResult = checkSpelling(content, vocabWords);
+
     const text = await Text.create({
       user_id: req.user.user_id,
       title,
       content,
       text_type_id,
       word_count,
+      spelling_errors: spellCheckResult.errorCount,
       created_at: new Date(),
       updated_at: new Date()
     });
 
-    res.status(201).json(text);
+    res.status(201).json({
+      text,
+      spell_check: {
+        error_count: spellCheckResult.errorCount,
+        errors: spellCheckResult.errors
+      }
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error creating text' });
@@ -91,10 +110,26 @@ exports.updateText = async (req, res) => {
     }
 
     if (title) text.title = title;
+    
+    let spellCheckResult = null;
+    
     if (content) {
       text.content = content;
       text.word_count = content.trim().split(/\s+/).length;
+      
+      // Fetch user's vocabulary
+      const userVocab = await Vocabulary.findAll({
+        where: { user_id: req.user.user_id },
+        attributes: ['word']
+      });
+      
+      const vocabWords = userVocab.map(v => v.word);
+      
+      // Check spelling (synchronous, excluding user vocabulary)
+      spellCheckResult = checkSpelling(content, vocabWords);
+      text.spelling_errors = spellCheckResult.errorCount;
     }
+    
     if (text_type_id) text.text_type_id = text_type_id;
 
     text.updated_at = new Date();
@@ -103,7 +138,11 @@ exports.updateText = async (req, res) => {
 
     res.json({
       message: 'Text updated successfully',
-      text
+      text,
+      spell_check: spellCheckResult ? {
+        error_count: spellCheckResult.errorCount,
+        errors: spellCheckResult.errors
+      } : null
     });
   } catch (error) {
     console.error(error);
