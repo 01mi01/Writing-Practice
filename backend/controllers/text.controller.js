@@ -74,11 +74,11 @@ exports.createText = async (req, res) => {
 
     const vocabWords = userVocab.map((v) => v.word);
 
-    // Check spelling (synchronous, excluding user vocabulary)
-    const spellCheckResult = checkSpelling(content, vocabWords);
-
-    // Count vocabulary usage
+    // Count vocabulary usage FIRST
     const vocabUsage = countVocabularyUsage(content, vocabWords);
+
+    // Check spelling (excluding user vocabulary)
+    const spellCheckResult = checkSpelling(content, vocabWords);
 
     const text = await Text.create({
       user_id: req.user.user_id,
@@ -143,13 +143,13 @@ exports.updateText = async (req, res) => {
 
       const vocabWords = userVocab.map((v) => v.word);
 
-      // Check spelling (synchronous, excluding user vocabulary)
-      spellCheckResult = checkSpelling(content, vocabWords);
-      text.spelling_errors = spellCheckResult.errorCount;
-
-      // Count vocabulary usage
+      // Count vocabulary usage FIRST
       const vocabUsage = countVocabularyUsage(content, vocabWords);
       text.vocab_words_used = vocabUsage.vocabWordsUsed;
+
+      // Check spelling (excluding user vocabulary)
+      spellCheckResult = checkSpelling(content, vocabWords);
+      text.spelling_errors = spellCheckResult.errorCount;
     }
 
     if (text_type_id) text.text_type_id = text_type_id;
