@@ -69,13 +69,21 @@ exports.createText = async (req, res) => {
     // Fetch user's vocabulary
     const userVocab = await Vocabulary.findAll({
       where: { user_id: req.user.user_id },
-      attributes: ["word"],
+      attributes: ["vocab_id", "word"],
     });
 
     const vocabWords = userVocab.map((v) => v.word);
 
     // Count vocabulary usage FIRST
     const vocabUsage = countVocabularyUsage(content, vocabWords);
+
+    // Update times_used for each vocabulary word found
+    for (const foundWord of vocabUsage.wordsFound) {
+      await Vocabulary.increment(
+        { times_used: foundWord.count },
+        { where: { user_id: req.user.user_id, word: foundWord.word } },
+      );
+    }
 
     // Check spelling (excluding user vocabulary)
     const spellCheckResult = checkSpelling(content, vocabWords);
@@ -100,6 +108,7 @@ exports.createText = async (req, res) => {
         error_count: spellCheckResult.errorCount,
         errors: spellCheckResult.errors,
       },
+      vocabulary_usage: vocabUsage.wordsFound,
     });
   } catch (error) {
     console.error(error);
@@ -127,6 +136,26 @@ exports.updateText = async (req, res) => {
     let spellCheckResult = null;
 
     if (content) {
+      // Fetch user's vocabulary
+      const userVocab = await Vocabulary.findAll({
+        where: { user_id: req.user.user_id },
+        attributes: ["vocab_id", "word"],
+      });
+
+      const vocabWords = userVocab.map((v) => v.word);
+
+      // Count OLD vocabulary usage (before update)
+      const oldVocabUsage = countVocabularyUsage(text.content, vocabWords);
+
+      // Decrement times_used for old content
+      for (const foundWord of oldVocabUsage.wordsFound) {
+        await Vocabulary.decrement(
+          { times_used: foundWord.count },
+          { where: { user_id: req.user.user_id, word: foundWord.word } },
+        );
+      }
+
+      // Update text content
       text.content = content;
       text.word_count = content.trim().split(/\s+/).length;
 
@@ -135,17 +164,17 @@ exports.updateText = async (req, res) => {
       text.basic_connectors_count = basicCount;
       text.advanced_connectors_count = advancedCount;
 
-      // Fetch user's vocabulary
-      const userVocab = await Vocabulary.findAll({
-        where: { user_id: req.user.user_id },
-        attributes: ["word"],
-      });
+      // Count NEW vocabulary usage
+      const newVocabUsage = countVocabularyUsage(content, vocabWords);
+      text.vocab_words_used = newVocabUsage.vocabWordsUsed;
 
-      const vocabWords = userVocab.map((v) => v.word);
-
-      // Count vocabulary usage FIRST
-      const vocabUsage = countVocabularyUsage(content, vocabWords);
-      text.vocab_words_used = vocabUsage.vocabWordsUsed;
+      // Increment times_used for new content
+      for (const foundWord of newVocabUsage.wordsFound) {
+        await Vocabulary.increment(
+          { times_used: foundWord.count },
+          { where: { user_id: req.user.user_id, word: foundWord.word } },
+        );
+      }
 
       // Check spelling (excluding user vocabulary)
       spellCheckResult = checkSpelling(content, vocabWords);

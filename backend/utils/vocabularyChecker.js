@@ -7,19 +7,30 @@ const countVocabularyUsage = (text, userVocabulary = []) => {
   }
 
   // Normalize text for case-insensitive matching
+  // Keep hyphens and apostrophes for compound words and contractions
   const normalizedText = text.toLowerCase().replace(/'/g, "'");
   
   const wordsFound = [];
   let totalUsageCount = 0;
 
   userVocabulary.forEach(vocabWord => {
-    const word = vocabWord.toLowerCase();
+    const word = vocabWord.toLowerCase().trim();
     
-    // Use word boundary regex for exact matching
-    const regex = new RegExp(`\\b${word}\\b`, 'gi');
-    const matches = normalizedText.match(regex);
+    // Escape special regex characters in the vocab word
+    const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     
-    if (matches && matches.length > 0) {
+    // Match word boundaries - before: space, start of text, or punctuation
+    // after: space, end of text, or punctuation
+    const regex = new RegExp(`(?:^|\\s|[.,!?;:])${escapedWord}(?=\\s|[.,!?;:]|$)`, 'gi');
+    
+    // Find all matches
+    const matches = [];
+    let match;
+    while ((match = regex.exec(normalizedText)) !== null) {
+      matches.push(match);
+    }
+    
+    if (matches.length > 0) {
       wordsFound.push({
         word: vocabWord,
         count: matches.length
