@@ -1,11 +1,5 @@
-const BASIC_CONNECTORS = ['and', 'but', 'so', 'because'];
+const { BASIC_CONNECTORS, ADVANCED_CONNECTORS } = require('../constants/connectors');
 
-const ADVANCED_CONNECTORS = [
-  'however', 'moreover', 'nevertheless', 'furthermore', 
-  'consequently', 'therefore', 'additionally', 'alternatively', 
-  'whereas', 'thus', 'in conclusion', 'in other words', 
-  'as a result', 'on the other hand', 'in contrast'
-];
 
 const countConnectors = (text) => {
   const lowerText = text.toLowerCase();

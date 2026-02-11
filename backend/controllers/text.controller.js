@@ -2,6 +2,7 @@ const { checkSpelling } = require("../utils/spellChecker");
 const { countConnectors } = require("../utils/connectorChecker");
 const { countVocabularyUsage } = require("../utils/vocabularyChecker");
 const { Text, TextType, Vocabulary } = require("../models");
+const { generateSuggestions } = require("../utils/suggestionGenerator");
 
 exports.getTexts = async (req, res) => {
   try {
@@ -88,6 +89,13 @@ exports.createText = async (req, res) => {
     // Check spelling (excluding user vocabulary)
     const spellCheckResult = checkSpelling(content, vocabWords);
 
+    // Generate suggestions
+    const suggestions = generateSuggestions(
+      word_count,
+      basicCount,
+      advancedCount,
+    );
+
     const text = await Text.create({
       user_id: req.user.user_id,
       title,
@@ -109,6 +117,7 @@ exports.createText = async (req, res) => {
         errors: spellCheckResult.errors,
       },
       vocabulary_usage: vocabUsage.wordsFound,
+      suggestions: suggestions, // ADD THIS
     });
   } catch (error) {
     console.error(error);
@@ -185,6 +194,16 @@ exports.updateText = async (req, res) => {
 
     text.updated_at = new Date();
 
+    // Generate suggestions if content was updated
+    let suggestions = null;
+    if (content) {
+      suggestions = generateSuggestions(
+        text.word_count,
+        text.basic_connectors_count,
+        text.advanced_connectors_count,
+      );
+    }
+
     await text.save();
 
     res.json({
@@ -196,6 +215,7 @@ exports.updateText = async (req, res) => {
             errors: spellCheckResult.errors,
           }
         : null,
+      suggestions: suggestions, // ADD THIS
     });
   } catch (error) {
     console.error(error);
