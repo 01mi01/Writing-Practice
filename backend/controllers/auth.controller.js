@@ -24,7 +24,7 @@ exports.registerUser = async (req, res) => {
   if (!username || !email || !password || !birth_date || !english_level_id) {
     return res.status(400).json({
       message:
-        "Username, email, password, birth_date, and english_level_id are required",
+        "Nombre de usuario, email, contraseña, fecha de nacimiento y nivel de inglés son requeridos",
     });
   }
 
@@ -33,12 +33,14 @@ exports.registerUser = async (req, res) => {
     if (userExists) {
       return res
         .status(400)
-        .json({ message: "User already exists with this email" });
+        .json({ message: "Ya existe un usuario con este email" });
     }
 
     const usernameExists = await User.findOne({ where: { username } });
     if (usernameExists) {
-      return res.status(400).json({ message: "Username already taken" });
+      return res
+        .status(400)
+        .json({ message: "El nombre de usuario ya está en uso" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -60,7 +62,7 @@ exports.registerUser = async (req, res) => {
     });
 
     res.status(201).json({
-      message: "User registered successfully",
+      message: "Usuario registrado exitosamente",
       user: {
         user_id: newUser.user_id,
         username: newUser.username,
@@ -69,7 +71,7 @@ exports.registerUser = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Error del servidor" });
   }
 };
 
@@ -77,18 +79,18 @@ exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
+    return res.status(400).json({ message: "Email y contraseña son requeridos" });
   }
 
   try {
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(400).json({ message: "Usuario no encontrado" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) {
-      return res.status(400).json({ message: "Incorrect password" });
+      return res.status(400).json({ message: "Contraseña incorrecta" });
     }
 
     const token = jwt.sign(
@@ -108,6 +110,6 @@ exports.loginUser = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Error del servidor" });
   }
 };

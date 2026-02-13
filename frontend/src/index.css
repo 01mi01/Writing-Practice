@@ -1,0 +1,38 @@
+@import "tailwindcss";
+@import "./styles/themes.css";
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.animation-delay-1000 { animation-delay: 1s; }
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
+
+@keyframes pulse-aura-1 {
+  0%, 100% { transform: scale(1);    opacity: 0.55; filter: blur(60px); }
+  50%       { transform: scale(1.25); opacity: 0.85; filter: blur(40px); }
+}
+
+@keyframes pulse-aura-2 {
+  0%, 100% { transform: scale(1.05); opacity: 0.50; filter: blur(55px); }
+  50%       { transform: scale(1.28); opacity: 0.82; filter: blur(38px); }
+}
+
+@keyframes pulse-aura-3 {
+  0%, 100% { transform: scale(0.95); opacity: 0.58; filter: blur(58px); }
+  50%       { transform: scale(1.26); opacity: 0.88; filter: blur(36px); }
+}
+
+@keyframes pulse-aura-4 {
+  0%, 100% { transform: scale(1.02); opacity: 0.52; filter: blur(52px); }
+  50%       { transform: scale(1.30); opacity: 0.84; filter: blur(34px); }
+}
+
+.blob-1 { animation: pulse-aura-1 7s ease-in-out infinite; }
+.blob-2 { animation: pulse-aura-2 9s ease-in-out infinite; }
+.blob-3 { animation: pulse-aura-3 8s ease-in-out infinite; }
+.blob-4 { animation: pulse-aura-4 6s ease-in-out infinite; }
