@@ -113,9 +113,7 @@ const Preferences = ({ onNavigate, onLogout }) => {
   };
 
   const selectStyle = {
-    background: "var(--glass-bg)",
-    backdropFilter: "var(--glass-blur)",
-    WebkitBackdropFilter: "var(--glass-blur)",
+    background: "var(--select-bg)",
     border: "1px solid var(--glass-border)",
     color: "var(--text-primary)",
     borderRadius: "14px",
@@ -170,7 +168,7 @@ const Preferences = ({ onNavigate, onLogout }) => {
                   <option
                     key={t.theme_id}
                     value={t.theme_id}
-                    style={{ background: "#1e293b", color: "#f1f5f9" }}
+                    style={{ background: "var(--select-option-bg)", color: "var(--select-option-color)" }}
                   >
                     {t.theme_name}
                   </option>
@@ -192,7 +190,7 @@ const Preferences = ({ onNavigate, onLogout }) => {
                   <option
                     key={c.color_id}
                     value={c.color_id}
-                    style={{ background: "#1e293b", color: "#f1f5f9" }}
+                    style={{ background: "var(--select-option-bg)", color: "var(--select-option-color)" }}
                   >
                     {c.color_name}
                   </option>
@@ -200,7 +198,7 @@ const Preferences = ({ onNavigate, onLogout }) => {
               </select>
             </div>
 
-            {/* Buttons row — same level as dropdowns width */}
+            {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
               {feedback && (
                 <span className="text-sm font-medium" style={{ color: "var(--text-muted)" }}>

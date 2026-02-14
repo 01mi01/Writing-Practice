@@ -84,7 +84,7 @@ const UserDashboard = ({ onNavigate, onLogout }) => {
             <div className="flex flex-wrap items-baseline justify-center gap-3">
               <p
                 className="text-base sm:text-lg font-medium"
-                style={{ color: "var(--text-muted)" }}
+                style={{ color: "var(--text-secondary)" }}
               >
                 Bienvenido de nuevo,
               </p>

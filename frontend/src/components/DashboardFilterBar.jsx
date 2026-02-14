@@ -95,33 +95,33 @@ const DashboardFilterBar = ({
         <div className="flex flex-wrap gap-3 items-end">
 
           <div className="flex flex-col gap-1 min-w-[130px]">
-            <label className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>Fecha inicio</label>
+            <label className="text-xs font-medium" style={{ color: "var(--text-primary)" }}>Fecha inicio</label>
             <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
               className="rounded-xl px-3 py-2 text-sm outline-none" style={inputStyle} />
           </div>
 
           <div className="flex flex-col gap-1 min-w-[130px]">
-            <label className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>Fecha fin</label>
+            <label className="text-xs font-medium" style={{ color: "var(--text-primary)" }}>Fecha fin</label>
             <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}
               className="rounded-xl px-3 py-2 text-sm outline-none" style={inputStyle} />
           </div>
 
           <div className="flex flex-col gap-1 min-w-[80px]">
-            <label className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>Edad mín.</label>
+            <label className="text-xs font-medium" style={{ color: "var(--text-primary)" }}>Edad mín.</label>
             <input type="number" min="0" max="120" placeholder="–" value={minAge}
               onChange={(e) => setMinAge(e.target.value)}
               className="rounded-xl px-3 py-2 text-sm outline-none" style={inputStyle} />
           </div>
 
           <div className="flex flex-col gap-1 min-w-[80px]">
-            <label className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>Edad máx.</label>
+            <label className="text-xs font-medium" style={{ color: "var(--text-primary)" }}>Edad máx.</label>
             <input type="number" min="0" max="120" placeholder="–" value={maxAge}
               onChange={(e) => setMaxAge(e.target.value)}
               className="rounded-xl px-3 py-2 text-sm outline-none" style={inputStyle} />
           </div>
 
           <div className="flex flex-col gap-1 min-w-[150px]">
-            <label className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>Nivel de inglés</label>
+            <label className="text-xs font-medium" style={{ color: "var(---text-primary)" }}>Nivel de inglés</label>
             <MultiSelect
               options={englishLevels}
               selected={selectedLevels}
@@ -133,7 +133,7 @@ const DashboardFilterBar = ({
           </div>
 
           <div className="flex flex-col gap-1 min-w-[170px]">
-            <label className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>Certificaciones</label>
+            <label className="text-xs font-medium" style={{ color: "var(--text-primary)" }}>Certificaciones</label>
             <MultiSelect
               options={certifications}
               selected={selectedCerts}
@@ -145,7 +145,7 @@ const DashboardFilterBar = ({
           </div>
 
           <div className="flex flex-col gap-1 min-w-[120px]">
-            <label className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>Período</label>
+            <label className="text-xs font-medium" style={{ color: "var(--text-primary)" }}>Período</label>
             <select value={frequencyPeriod} onChange={(e) => setFrequencyPeriod(e.target.value)}
               className="rounded-xl px-3 py-2 text-sm outline-none" style={inputStyle}>
               <option value="week">Semana</option>
