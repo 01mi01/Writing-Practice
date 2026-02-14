@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import Preferences from "./pages/Preferences";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("landing");
@@ -26,6 +27,7 @@ function App() {
       {currentPage === "register" && <Register onNavigate={handleNavigate} />}
       {currentPage === "user-dashboard" && <UserDashboard onNavigate={handleNavigate} onLogout={handleLogout} />}
       {currentPage === "admin-dashboard" && <AdminDashboard onNavigate={handleNavigate} onLogout={handleLogout} />}
+      {currentPage === "preferences" && <Preferences onNavigate={handleNavigate} onLogout={handleLogout} />}
     </>
   );
 }

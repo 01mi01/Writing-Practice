@@ -14,7 +14,7 @@ const Landing = ({ onNavigate }) => {
 
       <BackgroundAnimated />
 
-      <Navbar links={navLinks} />
+      <Navbar links={navLinks} activePage="Inicio" />
 
       {/* Hero Section */}
       <section className="px-4 sm:px-8 py-12 sm:py-20 relative z-10">

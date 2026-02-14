@@ -127,7 +127,7 @@ const Register = ({ onNavigate }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-100 to-slate-100 relative overflow-hidden">
       <BackgroundStatic />
-      <Navbar links={navLinks} />
+      <Navbar links={navLinks} activePage="Registrarse" />
 
       <section className="px-4 sm:px-8 py-12 sm:py-20 relative z-10">
         <GlassCard className="max-w-md mx-auto px-8 sm:px-12 py-10 sm:py-14 shadow-2xl">
