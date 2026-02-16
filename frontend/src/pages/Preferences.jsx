@@ -26,9 +26,15 @@ const Preferences = ({ onNavigate, onLogout }) => {
     const fetchAll = async () => {
       try {
         const [themesRes, colorsRes, prefsRes] = await Promise.all([
-          fetch("http://localhost:3000/api/preferences/themes", { headers: { Authorization: `Bearer ${token}` } }),
-          fetch("http://localhost:3000/api/preferences/colors", { headers: { Authorization: `Bearer ${token}` } }),
-          fetch("http://localhost:3000/api/preferences", { headers: { Authorization: `Bearer ${token}` } }),
+          fetch("http://localhost:3000/api/preferences/themes", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch("http://localhost:3000/api/preferences/colors", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch("http://localhost:3000/api/preferences", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
         ]);
 
         const themesData = await themesRes.json();
@@ -42,7 +48,7 @@ const Preferences = ({ onNavigate, onLogout }) => {
 
         applyTheme(
           prefsData?.theme?.theme_name ?? "light",
-          prefsData?.color?.color_name ?? "cold"
+          prefsData?.color?.color_name ?? "cold",
         );
       } catch (err) {
         console.error(err);
@@ -51,8 +57,10 @@ const Preferences = ({ onNavigate, onLogout }) => {
     fetchAll();
   }, []);
 
-  const getThemeName = (id) => themes.find((t) => t.theme_id === id)?.theme_name ?? "";
-  const getColorName = (id) => colors.find((c) => c.color_id === id)?.color_name ?? "";
+  const getThemeName = (id) =>
+    themes.find((t) => t.theme_id === id)?.theme_name ?? "";
+  const getColorName = (id) =>
+    colors.find((c) => c.color_id === id)?.color_name ?? "";
 
   const handleThemeChange = (id) => {
     setSelectedThemeId(id);
@@ -70,8 +78,14 @@ const Preferences = ({ onNavigate, onLogout }) => {
     try {
       const res = await fetch("http://localhost:3000/api/preferences", {
         method: "PUT",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ theme_id: selectedThemeId, color_id: selectedColorId }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          theme_id: selectedThemeId,
+          color_id: selectedColorId,
+        }),
       });
       if (res.ok) {
         setFeedback("Guardado");
@@ -87,8 +101,10 @@ const Preferences = ({ onNavigate, onLogout }) => {
   };
 
   const handleReset = async () => {
-    const defaultThemeId = themes.find((t) => t.theme_name.toLowerCase() === "light")?.theme_id ?? 1;
-    const defaultColorId = colors.find((c) => c.color_name.toLowerCase() === "cold")?.color_id ?? 1;
+    const defaultThemeId =
+      themes.find((t) => t.theme_name.toLowerCase() === "light")?.theme_id ?? 1;
+    const defaultColorId =
+      colors.find((c) => c.color_name.toLowerCase() === "cold")?.color_id ?? 1;
 
     setSelectedThemeId(defaultThemeId);
     setSelectedColorId(defaultColorId);
@@ -98,11 +114,17 @@ const Preferences = ({ onNavigate, onLogout }) => {
     try {
       const res = await fetch("http://localhost:3000/api/preferences", {
         method: "PUT",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ theme_id: defaultThemeId, color_id: defaultColorId }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          theme_id: defaultThemeId,
+          color_id: defaultColorId,
+        }),
       });
       if (res.ok) {
-        setFeedback("Valores restablecidos");
+        setFeedback("Valores predeterminados restablecidos");
         setTimeout(() => setFeedback(""), 2500);
       }
     } catch {
@@ -113,7 +135,9 @@ const Preferences = ({ onNavigate, onLogout }) => {
   };
 
   const selectStyle = {
-    background: "var(--select-bg)",
+    background: "var(--glass-bg)",
+    backdropFilter: "var(--glass-blur)",
+    WebkitBackdropFilter: "var(--glass-blur)",
     border: "1px solid var(--glass-border)",
     color: "var(--text-primary)",
     borderRadius: "14px",
@@ -141,7 +165,10 @@ const Preferences = ({ onNavigate, onLogout }) => {
   return (
     <div
       className="min-h-screen relative overflow-hidden pb-16"
-      style={{ background: "linear-gradient(135deg, var(--bg-gradient-from), var(--bg-gradient-via), var(--bg-gradient-to))" }}
+      style={{
+        background:
+          "linear-gradient(135deg, var(--bg-gradient-from), var(--bg-gradient-via), var(--bg-gradient-to))",
+      }}
     >
       <BackgroundStatic />
       <Navbar links={navLinks} activePage="Personalizar" />
@@ -149,14 +176,19 @@ const Preferences = ({ onNavigate, onLogout }) => {
       <section className="px-4 sm:px-8 py-10 relative z-10">
         <div className="max-w-2xl mx-auto">
           <GlassCard className="px-8 sm:px-12 py-10 shadow-2xl flex flex-col gap-8">
-
-            <h2 className="text-2xl sm:text-3xl font-bold" style={{ color: "var(--text-primary)" }}>
+            <h2
+              className="text-2xl sm:text-3xl font-bold"
+              style={{ color: "var(--text-primary)" }}
+            >
               Personalización
             </h2>
 
             {/* Theme */}
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+              <label
+                className="text-sm font-medium"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 Tema
               </label>
               <select
@@ -168,7 +200,10 @@ const Preferences = ({ onNavigate, onLogout }) => {
                   <option
                     key={t.theme_id}
                     value={t.theme_id}
-                    style={{ background: "var(--select-option-bg)", color: "var(--select-option-color)" }}
+                    style={{
+                      background: "var(--select-option-bg)",
+                      color: "var(--select-option-color)",
+                    }}
                   >
                     {t.theme_name}
                   </option>
@@ -178,7 +213,10 @@ const Preferences = ({ onNavigate, onLogout }) => {
 
             {/* Color scheme */}
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+              <label
+                className="text-sm font-medium"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 Esquema de colores
               </label>
               <select
@@ -190,7 +228,10 @@ const Preferences = ({ onNavigate, onLogout }) => {
                   <option
                     key={c.color_id}
                     value={c.color_id}
-                    style={{ background: "var(--select-option-bg)", color: "var(--select-option-color)" }}
+                    style={{
+                      background: "var(--select-option-bg)",
+                      color: "var(--select-option-color)",
+                    }}
                   >
                     {c.color_name}
                   </option>
@@ -201,7 +242,10 @@ const Preferences = ({ onNavigate, onLogout }) => {
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
               {feedback && (
-                <span className="text-sm font-medium" style={{ color: "var(--text-muted)" }}>
+                <span
+                  className="text-sm font-medium"
+                  style={{ color: "var(--text-muted)" }}
+                >
                   {feedback}
                 </span>
               )}
@@ -209,24 +253,44 @@ const Preferences = ({ onNavigate, onLogout }) => {
                 <button
                   onClick={handleReset}
                   disabled={saving}
-                  style={{ ...btnBase, background: "rgba(255,255,255,0.15)", flex: 1 }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.30)"}
-                  onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
+                  style={{
+                    ...btnBase,
+                    background: "rgba(255,255,255,0.15)",
+                    flex: 1,
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background =
+                      "rgba(255,255,255,0.30)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background =
+                      "rgba(255,255,255,0.15)")
+                  }
                 >
                   Restablecer valores predeterminados
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  style={{ ...btnBase, background: "rgba(255,255,255,0.25)", fontWeight: 600, flex: 1 }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.40)"}
-                  onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.25)"}
+                  style={{
+                    ...btnBase,
+                    background: "rgba(255,255,255,0.25)",
+                    fontWeight: 600,
+                    flex: 1,
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background =
+                      "rgba(255,255,255,0.40)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background =
+                      "rgba(255,255,255,0.25)")
+                  }
                 >
                   {saving ? "Guardando..." : "Guardar cambios"}
                 </button>
               </div>
             </div>
-
           </GlassCard>
         </div>
       </section>

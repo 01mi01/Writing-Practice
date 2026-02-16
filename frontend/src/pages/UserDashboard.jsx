@@ -80,19 +80,19 @@ const UserDashboard = ({ onNavigate, onLogout }) => {
         <div className="max-w-7xl mx-auto flex flex-col gap-5 mt-10">
           {/* Hero welcome card */}
           <GlassCard className="px-8 sm:px-14 py-10 sm:py-14 shadow-2xl text-center flex flex-col items-center gap-8">
-            {/* Welcome message — single line */}
+            {/* Welcome + username same size, same line */}
             <div className="flex flex-wrap items-baseline justify-center gap-3">
-              <p
-                className="text-base sm:text-lg font-medium"
-                style={{ color: "var(--text-secondary)" }}
+              <h2
+                className="text-2xl sm:text-3xl font-bold"
+                style={{ color: "var(--text-primary)" }}
               >
-                Bienvenido de nuevo,
-              </p>
+                Bienvenido,
+              </h2>
               <h2
                 className="text-2xl sm:text-3xl font-bold"
                 style={{
                   background:
-                    "linear-gradient(to right, var(--text-primary), var(--text-secondary))",
+                    "linear-gradient(to right, var(--color-1-from), var(--color-1-to))",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
@@ -131,7 +131,7 @@ const UserDashboard = ({ onNavigate, onLogout }) => {
                 >
                   <p
                     className="text-xs sm:text-sm font-medium text-center sm:text-left"
-                    style={{ color: "var(--text-muted)" }}
+                    style={{ color: "var(--text-primary)", opacity: 0.7 }}
                   >
                     {stat.label}
                   </p>
@@ -147,7 +147,7 @@ const UserDashboard = ({ onNavigate, onLogout }) => {
                     {stat.unit && (
                       <span
                         className="text-sm font-medium ml-1"
-                        style={{ color: "var(--text-muted)" }}
+                        style={{ color: "var(--text-primary)", opacity: 0.6 }}
                       >
                         {stat.unit}
                       </span>
@@ -162,7 +162,14 @@ const UserDashboard = ({ onNavigate, onLogout }) => {
               <button
                 onClick={() => onNavigate("mis-textos")}
                 className="px-8 py-3 font-semibold text-base rounded-2xl transition-all transform hover:scale-105 hover:shadow-2xl"
-                style={{ ...btnStyle, color: "var(--text-primary)" }}
+                style={{
+                  background: "rgba(255,255,255,0.15)",
+                  backdropFilter: "blur(16px)",
+                  WebkitBackdropFilter: "blur(16px)",
+                  border: "1px solid rgba(255,255,255,0.50)",
+                  boxShadow: "0 4px 24px rgba(255,255,255,0.10)",
+                  color: "var(--text-primary)",
+                }}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.background = "rgba(255,255,255,0.30)")
                 }
@@ -175,7 +182,14 @@ const UserDashboard = ({ onNavigate, onLogout }) => {
               <button
                 onClick={() => onNavigate("vocabulario")}
                 className="px-8 py-3 font-semibold text-base rounded-2xl transition-all transform hover:scale-105 hover:shadow-2xl"
-                style={{ ...btnStyle, color: "var(--text-primary)" }}
+                style={{
+                  background: "rgba(255,255,255,0.15)",
+                  backdropFilter: "blur(16px)",
+                  WebkitBackdropFilter: "blur(16px)",
+                  border: "1px solid rgba(255,255,255,0.50)",
+                  boxShadow: "0 4px 24px rgba(255,255,255,0.10)",
+                  color: "var(--text-primary)",
+                }}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.background = "rgba(255,255,255,0.30)")
                 }

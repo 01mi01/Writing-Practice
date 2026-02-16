@@ -1,17 +1,22 @@
 import GlassCard from "../components/GlassCard";
 import Navbar from "../components/Navbar";
 import BackgroundAnimated from "../components/BackgroundAnimated";
+import { useEffect } from "react";
+import { applyTheme } from "../utils/applyTheme";
 
 const Landing = ({ onNavigate }) => {
+  useEffect(() => {
+    applyTheme("light", "cold");
+  }, []);
+
   const navLinks = [
-    { label: 'Inicio', onClick: () => onNavigate("landing") },
-    { label: 'Registrarse', onClick: () => onNavigate("register") },
-    { label: 'Iniciar sesión', onClick: () => onNavigate("login") },
+    { label: "Inicio", onClick: () => onNavigate("landing") },
+    { label: "Registrarse", onClick: () => onNavigate("register") },
+    { label: "Iniciar sesión", onClick: () => onNavigate("login") },
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-100 to-slate-100 relative overflow-hidden">
-
       <BackgroundAnimated />
 
       <Navbar links={navLinks} activePage="Inicio" />
@@ -32,11 +37,11 @@ const Landing = ({ onNavigate }) => {
             onClick={() => onNavigate("register")}
             className="px-8 py-4 text-gray-700 font-semibold text-base sm:text-lg rounded-2xl transition-all transform hover:scale-105 hover:shadow-2xl shadow-lg"
             style={{
-              background: 'rgba(255, 255, 255, 0.15)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255, 255, 255, 0.50)',
-              boxShadow: '0 4px 24px rgba(255, 255, 255, 0.10)',
+              background: "rgba(255, 255, 255, 0.15)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
+              border: "1px solid rgba(255, 255, 255, 0.50)",
+              boxShadow: "0 4px 24px rgba(255, 255, 255, 0.10)",
             }}
           >
             Comenzar ahora

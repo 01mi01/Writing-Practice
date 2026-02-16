@@ -108,19 +108,8 @@ const UserMetricsGrid = ({ data }) => {
 
   return (
     <div className="flex flex-col gap-5">
-
-      {/* Top summary row — 4 cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
-        <StatCard label="Palabras escritas" value={summary?.total_words_written} />
-        <StatCard label="Vocabulario personal" value={summary?.vocabulary_size} />
-        <StatCard label="Racha actual" value={summary?.current_streak} unit="días" />
-        <StatCard label="Racha más larga" value={summary?.longest_streak} unit="días" />
-      </div>
-
-      {/* Row 2 — Frecuencia, Palabras por texto, Conectores */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
 
-        {/* Frecuencia with period selector in card header */}
         <GlassCard className={`p-5 shadow-xl flex flex-col gap-3 ${cardHeight}`}>
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
@@ -168,7 +157,6 @@ const UserMetricsGrid = ({ data }) => {
         </ChartCard>
       </div>
 
-      {/* Row 3 — Vocab usage, Spelling errors, Entradas */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
 
         <ChartCard label="Uso de vocabulario personal">

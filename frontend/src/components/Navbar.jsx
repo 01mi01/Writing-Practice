@@ -24,18 +24,19 @@ const Navbar = ({ links = [], activePage = "" }) => {
                 <button
                   key={i}
                   onClick={link.onClick}
-                  className="px-5 py-2 rounded-xl text-sm transition-all"
+                  className="px-5 py-2 rounded-xl transition-all"
                   style={{
                     fontWeight: isActive ? 700 : 500,
+                    fontSize: isActive ? "0.9rem" : "0.875rem",
                     color: "var(--text-primary)",
                     border: "1px solid transparent",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.35)";
-                    e.currentTarget.style.backdropFilter = "blur(12px)";
-                    e.currentTarget.style.WebkitBackdropFilter = "blur(12px)";
-                    e.currentTarget.style.boxShadow = "0 2px 12px rgba(255,255,255,0.20)";
-                    e.currentTarget.style.border = "1px solid rgba(255,255,255,0.50)";
+                    e.currentTarget.style.background = "rgba(255,255,255,0.50)";
+                    e.currentTarget.style.backdropFilter = "blur(16px)";
+                    e.currentTarget.style.WebkitBackdropFilter = "blur(16px)";
+                    e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.08)";
+                    e.currentTarget.style.border = "1px solid rgba(255,255,255,0.60)";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = "transparent";
@@ -81,12 +82,13 @@ const Navbar = ({ links = [], activePage = "" }) => {
                 <button
                   key={i}
                   onClick={() => { setMenuOpen(false); link.onClick?.(); }}
-                  className="text-left px-3 py-2 rounded-xl text-sm transition-all"
+                  className="text-left px-3 py-2 rounded-xl transition-all"
                   style={{
                     fontWeight: isActive ? 700 : 500,
+                    fontSize: isActive ? "0.9rem" : "0.875rem",
                     color: "var(--text-primary)",
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.20)"}
+                  onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.30)"}
                   onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                 >
                   {link.label}
