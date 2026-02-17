@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import GlassCard from "../components/GlassCard";
 import Navbar from "../components/Navbar";
-import BackgroundStatic from "../components/BackgroundStatic";
+import BackgroundAnimated from "../components/BackgroundAnimated";
 
 const Register = ({ onNavigate }) => {
   const [step, setStep] = useState(1);
@@ -126,14 +126,14 @@ const Register = ({ onNavigate }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-100 to-slate-100 relative overflow-hidden">
-      <BackgroundStatic />
+      <BackgroundAnimated />
       <Navbar links={navLinks} activePage="Registrarse" />
 
       <section className="px-4 sm:px-8 py-12 sm:py-20 relative z-10">
         <GlassCard className="max-w-md mx-auto px-8 sm:px-12 py-10 sm:py-14 shadow-2xl">
           {step === 1 ? (
             <>
-              <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-10 text-center">
+              <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-10 text-center pb-2">
                 Registrarse
               </h2>
 
@@ -153,7 +153,7 @@ const Register = ({ onNavigate }) => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     className="w-full px-4 py-3 rounded-xl bg-white/50 border border-white/60 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400/50 backdrop-blur-sm"
-                    placeholder="usuario123"
+                    placeholder="Usuario"
                     required
                   />
                 </div>
@@ -206,7 +206,7 @@ const Register = ({ onNavigate }) => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Confirmar contraseña
+                    Confirmar la contraseña
                   </label>
                   <div className="relative">
                     <input
@@ -264,7 +264,7 @@ const Register = ({ onNavigate }) => {
             </>
           ) : (
             <>
-              <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-10 text-center">
+              <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-10 text-center pb-2">
                 Completa tu perfil
               </h2>
 
@@ -298,7 +298,7 @@ const Register = ({ onNavigate }) => {
                     className="w-full px-4 py-3 rounded-xl bg-white/50 border border-white/60 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400/50 backdrop-blur-sm"
                     required
                   >
-                    <option value="">Seleccionar nivel</option>
+                    <option value="">Seleccionar el nivel</option>
                     {englishLevels.map((level) => (
                       <option key={level.level_id} value={level.level_id}>
                         {level.level_name}
@@ -309,7 +309,7 @@ const Register = ({ onNavigate }) => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tipo de certificación vigente (opcional)
+                    Certificación actual (opcional)
                   </label>
                   <select
                     value={certificationTypeId}

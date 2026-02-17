@@ -24,14 +24,14 @@ const Landing = ({ onNavigate }) => {
       {/* Hero Section */}
       <section className="px-4 sm:px-8 py-12 sm:py-20 relative z-10">
         <GlassCard className="max-w-4xl mx-auto px-8 sm:px-16 py-14 sm:py-20 text-center shadow-2xl">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-6 sm:mb-8 leading-tight">
-            Desarrolla tu hábito de escritura en inglés
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-6 sm:mb-8 leading-tight pb-2">
+            Desarrolla tus habilidades de escritura en inglés
           </h2>
           <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-8 sm:mb-10 max-w-2xl mx-auto">
             Writing Practice es una plataforma diseñada para estudiantes de
-            inglés con nivel intermedio o avanzado que desean mantener y mejorar
-            sus habilidades de escritura mediante práctica constante,
-            retroalimentación personalizada y seguimiento de progreso.
+            inglés de nivel intermedio y avanzado que desean mantener y mejorar
+            sus habilidades de escritura a través de la práctica constante,
+            retroalimentación personalizada y seguimiento de su progreso.
           </p>
           <button
             onClick={() => onNavigate("register")}
@@ -59,35 +59,33 @@ const Landing = ({ onNavigate }) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
             <GlassCard className="p-7 sm:p-8 hover:shadow-2xl transition-all hover:scale-105 shadow-xl">
               <h4 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4">
-                Escritura y retroalimentación
-              </h4>
-              <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                Escribe textos libremente y recibe retroalimentación inmediata
-                sobre métricas clave: conteo de palabras, errores ortográficos,
-                uso de conectores avanzados y aplicación de tu vocabulario
-                personal.
-              </p>
-            </GlassCard>
-
-            <GlassCard className="p-7 sm:p-8 hover:shadow-2xl transition-all hover:scale-105 shadow-xl">
-              <h4 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4">
-                Vocabulario personalizado
-              </h4>
-              <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                Gestiona tu propia lista de vocabulario y monitorea cuántas
-                veces utilizas cada palabra en tus textos. Amplía tu léxico de
-                manera consciente y efectiva.
-              </p>
-            </GlassCard>
-
-            <GlassCard className="p-7 sm:p-8 hover:shadow-2xl transition-all hover:scale-105 shadow-xl">
-              <h4 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4">
                 Panel de seguimiento
               </h4>
-              <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                Visualiza tu progreso con gráficos claros y estadísticas
-                detalladas. Rastrea tu racha de escritura, frecuencia de
-                práctica y mejora continua en todas las métricas.
+              <p className="text-gray-700 leading-relaxed">
+                Visualiza tu progreso con gráficos y estadísticas detalladas.
+                Consulta tu racha de escritura, frecuencia de práctica y mejora
+                continua.
+              </p>
+            </GlassCard>
+
+            <GlassCard className="p-7 sm:p-8 hover:shadow-2xl transition-all hover:scale-105 shadow-xl">
+              <h4 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4">
+                Retroalimentación
+              </h4>
+              <p className="text-gray-700 leading-relaxed">
+                Practica escribiendo y recibe retroalimentación inmediata sobre
+                la cantidad de errores ortográficos, el uso de conectores
+                avanzados y palabras de tu lista de vocabulario personal.
+              </p>
+            </GlassCard>
+
+            <GlassCard className="p-7 sm:p-8 hover:shadow-2xl transition-all hover:scale-105 shadow-xl">
+              <h4 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4">
+                Vocabulario
+              </h4>
+              <p className="text-gray-700 leading-relaxed">
+                Crea y gestiona tu propia lista de palabras. Amplía tu
+                vocabulario y consulta su uso a través de métricas detalladas.
               </p>
             </GlassCard>
 
@@ -96,9 +94,8 @@ const Landing = ({ onNavigate }) => {
                 Interfaz personalizable
               </h4>
               <p className="text-gray-700 leading-relaxed">
-                Adapta la aplicación a tus preferencias visuales con temas
-                claros u oscuros y una paleta de colores de acento. Haz que tu
-                experiencia sea única y motivadora.
+                Personaliza la apariencia de la aplicación seleccionando un tema
+                claro u oscuro y paletas de colores que se ajusten a tu estilo.
               </p>
             </GlassCard>
           </div>
