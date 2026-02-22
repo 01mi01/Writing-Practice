@@ -12,9 +12,9 @@
   --glass-blur: blur(24px);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 
-  --text-primary: #1e293b;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
+  --text-primary: #282e37;
+  --text-secondary: #323a45;
+  --text-muted: #3c4553;
 
   --select-bg: rgba(255, 255, 255, 0.6);
   --select-option-bg: #ffffff;
@@ -30,13 +30,13 @@
   --bg-gradient-to: #1a2235;
 
   --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-border: rgba(255, 255, 255, 0.1);
   --glass-blur: blur(24px);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
 
-  --text-primary: #f8fafc;
-  --text-secondary: #e2e8f0;
-  --text-muted: #94a3b8;
+  --text-primary: #fefefe;
+  --text-secondary: #fcfdfe;
+  --text-muted: #fbfcfd;
 
   --select-bg: rgba(30, 41, 59, 0.95);
   --select-option-bg: #1e293b;
@@ -98,7 +98,7 @@
 [data-theme="dark"] {
   --chart-tick: #94a3b8;
   --chart-tooltip-bg: rgba(15, 17, 23, 0.85);
-  --chart-tooltip-border: rgba(255, 255, 255, 0.10);
+  --chart-tooltip-border: rgba(255, 255, 255, 0.1);
 }
 
 /* Native select option theming */

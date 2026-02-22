@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import GlassCard from "../components/GlassCard";
 import Navbar from "../components/Navbar";
-import BackgroundStatic from "../components/BackgroundStatic";
+import BackgroundAnimated from "../components/BackgroundAnimated";
 import { applyTheme } from "../utils/applyTheme";
 
 const btnStyle = {
@@ -86,7 +86,7 @@ const MisTextos = ({ onNavigate, onLogout }) => {
           "linear-gradient(135deg, var(--bg-gradient-from), var(--bg-gradient-via), var(--bg-gradient-to))",
       }}
     >
-      <BackgroundStatic />
+      <BackgroundAnimated />
       <Navbar links={navLinks} activePage="Mis textos" />
 
       <section className="px-4 sm:px-6 lg:px-8 relative z-10">
@@ -262,7 +262,8 @@ const MisTextos = ({ onNavigate, onLogout }) => {
                         color: "var(--text-primary)",
                       }}
                       onMouseEnter={(e) =>
-                        (e.currentTarget.style.background = "var(--glass-border)")
+                        (e.currentTarget.style.background =
+                          "var(--glass-border)")
                       }
                       onMouseLeave={(e) =>
                         (e.currentTarget.style.background = "var(--glass-bg)")
@@ -286,7 +287,8 @@ const MisTextos = ({ onNavigate, onLogout }) => {
                             : "var(--text-primary)",
                       }}
                       onMouseEnter={(e) =>
-                        (e.currentTarget.style.background = "var(--glass-border)")
+                        (e.currentTarget.style.background =
+                          "var(--glass-border)")
                       }
                       onMouseLeave={(e) =>
                         (e.currentTarget.style.background = "var(--glass-bg)")
