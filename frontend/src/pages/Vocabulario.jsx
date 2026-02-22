@@ -9,19 +9,15 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
   const [filteredVocabulary, setFilteredVocabulary] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [deleting, setDeleting] = useState(null);
 
   const [word, setWord] = useState("");
   const [definition, setDefinition] = useState("");
-  const [translation, setTranslation] = useState("");
+  const [translation, setTranslation] = useState(""); 
   const [category, setCategory] = useState("");
   const [usage, setUsage] = useState("");
   const [pronunciation, setPronunciation] = useState("");
-
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
 
   const navLinks = [
     { label: "Inicio", onClick: () => onNavigate("user-dashboard") },
@@ -32,25 +28,6 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
   ];
 
   const token = localStorage.getItem("token");
-
-  const categories = [
-    "Educación",
-    "Negocios",
-    "Literatura",
-    "Tecnología",
-    "Salud",
-    "Arte",
-    "Ciencia",
-    "Deportes",
-  ];
-  const usageTypes = [
-    "Sustantivo",
-    "Verbo",
-    "Adjetivo",
-    "Adverbio",
-    "Conector",
-    "Preposición",
-  ];
 
   useEffect(() => {
     fetchPrefsAndVocabulary();
@@ -120,49 +97,6 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
     setError("");
   };
 
-  const handleSave = async () => {
-    if (!word.trim()) {
-      setError("La palabra es obligatoria");
-      return;
-    }
-
-    setSaving(true);
-    setError("");
-
-    try {
-      const url = editingId
-        ? `http://localhost:3000/api/vocabulary/${editingId}`
-        : "http://localhost:3000/api/vocabulary";
-
-      const method = editingId ? "PUT" : "POST";
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          word,
-          definition,
-          translation,
-          category,
-          usage,
-          pronunciation,
-        }),
-      });
-
-      if (!response.ok) throw new Error("Error al guardar");
-
-      await fetchPrefsAndVocabulary();
-      closeForm();
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setSaving(false);
-    }
-  };
-
   const handleDelete = async (vocabId) => {
     if (!window.confirm("¿Eliminar esta palabra?")) return;
 
@@ -229,7 +163,7 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
                 style={inputStyle}
               />
               <svg
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5"
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
@@ -243,13 +177,13 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
 
             <button
               onClick={openAddForm}
-              className="px-8 py-4 font-semibold text-base sm:text-lg rounded-2xl transition-all transform hover:scale-105 hover:shadow-2xl shadow-lg whitespace-nowrap"
+              className="px-5 py-3 font-semibold text-sm rounded-xl transition-all transform hover:scale-105 hover:shadow-2xl shadow-lg whitespace-nowrap"
               style={{
-                background: "rgba(255, 255, 255, 0.15)",
-                backdropFilter: "blur(16px)",
-                WebkitBackdropFilter: "blur(16px)",
-                border: "1px solid rgba(255, 255, 255, 0.50)",
-                boxShadow: "0 4px 24px rgba(255, 255, 255, 0.10)",
+                background: "var(--glass-bg)",
+                backdropFilter: "var(--glass-blur)",
+                WebkitBackdropFilter: "var(--glass-blur)",
+                border: "1px solid var(--glass-border)",
+                boxShadow: "var(--glass-shadow)",
                 color: "var(--text-primary)",
               }}
             >
@@ -390,7 +324,7 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
                           opacity: 0.85,
                         }}
                       >
-                        {truncate(vocab.definition, 40)}
+                        {vocab.definition || "—"}
                       </td>
                       <td
                         className="py-3 px-4"
@@ -400,7 +334,7 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
                           opacity: 0.85,
                         }}
                       >
-                        {truncate(vocab.translation, 40)}
+                        {vocab.translation || "—"}
                       </td>
                       <td
                         className="py-3 px-4"

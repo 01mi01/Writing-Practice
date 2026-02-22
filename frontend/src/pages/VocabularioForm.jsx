@@ -227,8 +227,8 @@ const VocabularioForm = ({ onNavigate, onLogout, editVocabId = null }) => {
                   type="text"
                   value={pronunciation}
                   onChange={(e) => setPronunciation(e.target.value)}
-                  placeholder="/prəˌnʌnsiˈeɪʃən/"
-                  className="font-mono"
+                  placeholder="/prəˌnʌnsiˈeɪʃn/"
+                  className="font-mono" 
                   style={inputStyle}
                 />
               </div>
