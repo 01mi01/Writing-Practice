@@ -21,7 +21,6 @@ const Landing = ({ onNavigate }) => {
 
       <Navbar links={navLinks} activePage="Inicio" />
 
-      {/* Hero Section */}
       <section className="px-4 sm:px-8 py-12 sm:py-20 relative z-10">
         <GlassCard className="max-w-4xl mx-auto px-8 sm:px-16 py-14 sm:py-20 text-center shadow-2xl">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-6 sm:mb-8 leading-tight pb-2">
@@ -49,7 +48,6 @@ const Landing = ({ onNavigate }) => {
         </GlassCard>
       </section>
 
-      {/* Features Section */}
       <section className="px-4 sm:px-8 py-8 sm:py-16 pb-24 sm:pb-32 relative z-10">
         <div className="max-w-6xl mx-auto">
           <h3 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-8 sm:mb-12">

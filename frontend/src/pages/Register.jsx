@@ -6,7 +6,6 @@ import BackgroundAnimated from "../components/BackgroundAnimated";
 const Register = ({ onNavigate }) => {
   const [step, setStep] = useState(1);
 
-  // Step 1 fields
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,13 +13,11 @@ const Register = ({ onNavigate }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Step 2 fields
   const [birthDate, setBirthDate] = useState("2000-01-01");
   const [englishLevelId, setEnglishLevelId] = useState("");
   const [certificationTypeId, setCertificationTypeId] = useState("");
   const [certificationScore, setCertificationScore] = useState("");
 
-  // Dynamic data from backend
   const [englishLevels, setEnglishLevels] = useState([]);
   const [certifications, setCertifications] = useState([]);
 
@@ -122,7 +119,6 @@ const Register = ({ onNavigate }) => {
         return;
       }
 
-      console.log("Registro exitoso:", data);
       onNavigate("login");
     } catch (err) {
       setError("Error de conexión con el servidor");
@@ -137,6 +133,24 @@ const Register = ({ onNavigate }) => {
     confirmPassword &&
     password === confirmPassword;
   const step2Valid = birthDate && englishLevelId;
+
+  const fieldStyle = {
+    background: "var(--glass-bg)",
+    border: "1px solid var(--glass-border)",
+    backdropFilter: "var(--glass-blur)",
+    WebkitBackdropFilter: "var(--glass-blur)",
+  };
+
+  const fieldClass =
+    "w-full px-4 py-3 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400/50";
+
+  const btnStyle = {
+    background: "var(--glass-bg)",
+    backdropFilter: "var(--glass-blur)",
+    WebkitBackdropFilter: "var(--glass-blur)",
+    border: "1px solid var(--glass-border)",
+    boxShadow: "var(--glass-shadow)",
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-100 to-slate-100 relative overflow-hidden">
@@ -166,7 +180,8 @@ const Register = ({ onNavigate }) => {
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-white/50 border border-white/60 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400/50 backdrop-blur-sm"
+                    className={fieldClass}
+                    style={fieldStyle}
                     placeholder="Usuario"
                     required
                   />
@@ -180,7 +195,8 @@ const Register = ({ onNavigate }) => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-white/50 border border-white/60 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400/50 backdrop-blur-sm"
+                    className={fieldClass}
+                    style={fieldStyle}
                     placeholder="correo@ejemplo.com"
                     required
                   />
@@ -195,7 +211,8 @@ const Register = ({ onNavigate }) => {
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-white/50 border border-white/60 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400/50 backdrop-blur-sm"
+                      className={fieldClass}
+                      style={fieldStyle}
                       placeholder="••••••••"
                       required
                     />
@@ -252,7 +269,8 @@ const Register = ({ onNavigate }) => {
                       type={showConfirmPassword ? "text" : "password"}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-white/50 border border-white/60 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400/50 backdrop-blur-sm"
+                      className={fieldClass}
+                      style={fieldStyle}
                       placeholder="••••••••"
                       required
                     />
@@ -306,13 +324,7 @@ const Register = ({ onNavigate }) => {
                   type="submit"
                   disabled={!step1Valid}
                   className="w-full px-8 py-4 text-gray-800 font-semibold text-base sm:text-lg rounded-2xl transition-all transform hover:scale-105 hover:shadow-2xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                  style={{
-                    background: "rgba(255, 255, 255, 0.15)",
-                    backdropFilter: "blur(16px)",
-                    WebkitBackdropFilter: "blur(16px)",
-                    border: "1px solid rgba(255, 255, 255, 0.50)",
-                    boxShadow: "0 4px 24px rgba(255, 255, 255, 0.10)",
-                  }}
+                  style={btnStyle}
                 >
                   Continuar
                 </button>
@@ -349,7 +361,8 @@ const Register = ({ onNavigate }) => {
                     type="date"
                     value={birthDate}
                     onChange={(e) => setBirthDate(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-white/50 border border-white/60 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400/50 backdrop-blur-sm"
+                    className="w-full px-4 py-3 rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400/50"
+                    style={{ ...fieldStyle, colorScheme: "light" }}
                     required
                   />
                 </div>
@@ -358,15 +371,16 @@ const Register = ({ onNavigate }) => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Nivel de inglés
                   </label>
-                  <select
-                    value={englishLevelId}
-                    onChange={(e) => setEnglishLevelId(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-white/50 border border-white/60 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400/50 backdrop-blur-sm"
-                    required
-                  >
-                    <option value="">Seleccionar el nivel</option>
-                    {englishLevels
-                      .map((level) => {
+                  <div className="relative">
+                    <select
+                      value={englishLevelId}
+                      onChange={(e) => setEnglishLevelId(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400/50 appearance-none pr-10"
+                      style={{ ...fieldStyle, colorScheme: "light" }}
+                      required
+                    >
+                      <option value="">Seleccionar el nivel</option>
+                      {englishLevels.map((level) => {
                         const labelMap = {
                           A1: "Básico - A1",
                           A2: "Básico - A2",
@@ -382,28 +396,62 @@ const Register = ({ onNavigate }) => {
                           </option>
                         );
                       })}
-                  </select>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                      <svg
+                        className="w-4 h-4 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Certificación actual (opcional)
                   </label>
-                  <select
-                    value={certificationTypeId}
-                    onChange={(e) => setCertificationTypeId(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-white/50 border border-white/60 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400/50 backdrop-blur-sm"
-                  >
-                    <option value="">Sin certificación</option>
-                    {certifications.map((cert) => (
-                      <option
-                        key={cert.certification_id}
-                        value={cert.certification_id}
+                  <div className="relative">
+                    <select
+                      value={certificationTypeId}
+                      onChange={(e) => setCertificationTypeId(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400/50 appearance-none pr-10"
+                      style={{ ...fieldStyle, colorScheme: "light" }}
+                    >
+                      <option value="">Sin certificación</option>
+                      {certifications.map((cert) => (
+                        <option
+                          key={cert.certification_id}
+                          value={cert.certification_id}
+                        >
+                          {cert.certification_name}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                      <svg
+                        className="w-4 h-4 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
                       >
-                        {cert.certification_name}
-                      </option>
-                    ))}
-                  </select>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
@@ -414,7 +462,8 @@ const Register = ({ onNavigate }) => {
                     type="text"
                     value={certificationScore}
                     onChange={(e) => setCertificationScore(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-white/50 border border-white/60 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400/50 backdrop-blur-sm"
+                    className="w-full px-4 py-3 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400/50"
+                    style={fieldStyle}
                     placeholder="Ej: 110, 7.5, B2"
                   />
                 </div>
@@ -423,13 +472,7 @@ const Register = ({ onNavigate }) => {
                   type="submit"
                   disabled={!step2Valid}
                   className="w-full px-8 py-4 text-gray-800 font-semibold text-base sm:text-lg rounded-2xl transition-all transform hover:scale-105 hover:shadow-2xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                  style={{
-                    background: "rgba(255, 255, 255, 0.15)",
-                    backdropFilter: "blur(16px)",
-                    WebkitBackdropFilter: "blur(16px)",
-                    border: "1px solid rgba(255, 255, 255, 0.50)",
-                    boxShadow: "0 4px 24px rgba(255, 255, 255, 0.10)",
-                  }}
+                  style={btnStyle}
                 >
                   Registrarse
                 </button>
