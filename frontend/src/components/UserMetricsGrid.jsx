@@ -58,7 +58,7 @@ const periodSelectStyle = {
   border: "1px solid var(--glass-border)",
   color: "var(--text-primary)",
   borderRadius: "10px",
-  padding: "4px 10px",
+  padding: "4px 28px 4px 10px",
   fontSize: "13px",
   outline: "none",
   cursor: "pointer",

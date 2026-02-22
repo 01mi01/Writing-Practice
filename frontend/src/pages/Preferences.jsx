@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import GlassCard from "../components/GlassCard";
 import Navbar from "../components/Navbar";
-import BackgroundStatic from "../components/BackgroundStatic";
+import BackgroundAnimated from "../components/BackgroundAnimated";
 import { applyTheme } from "../utils/applyTheme";
 
 const Preferences = ({ onNavigate, onLogout }) => {
@@ -141,25 +141,31 @@ const Preferences = ({ onNavigate, onLogout }) => {
     border: "1px solid var(--glass-border)",
     color: "var(--text-primary)",
     borderRadius: "14px",
-    padding: "10px 14px",
+    padding: "10px 40px 10px 14px",
     fontSize: "14px",
     outline: "none",
     width: "100%",
     cursor: "pointer",
+    appearance: "none",
+    WebkitAppearance: "none",
+    MozAppearance: "none",
   };
 
-  const btnBase = {
-    backdropFilter: "blur(16px)",
-    WebkitBackdropFilter: "blur(16px)",
+  const btnStyle = {
+    background: "var(--glass-bg)",
+    backdropFilter: "var(--glass-blur)",
+    WebkitBackdropFilter: "var(--glass-blur)",
     border: "1px solid var(--glass-border)",
+    boxShadow: "var(--glass-shadow)",
     color: "var(--text-primary)",
     borderRadius: "14px",
     padding: "10px 20px",
     fontSize: "14px",
     fontWeight: 500,
     cursor: "pointer",
-    transition: "background 0.2s",
+    transition: "all 0.2s",
     whiteSpace: "nowrap",
+    flex: 1,
   };
 
   return (
@@ -170,7 +176,7 @@ const Preferences = ({ onNavigate, onLogout }) => {
           "linear-gradient(135deg, var(--bg-gradient-from), var(--bg-gradient-via), var(--bg-gradient-to))",
       }}
     >
-      <BackgroundStatic />
+      <BackgroundAnimated />
       <Navbar links={navLinks} activePage="Personalizar" />
 
       <section className="px-4 sm:px-8 py-10 relative z-10">
@@ -191,24 +197,42 @@ const Preferences = ({ onNavigate, onLogout }) => {
               >
                 Tema
               </label>
-              <select
-                value={selectedThemeId ?? ""}
-                onChange={(e) => handleThemeChange(parseInt(e.target.value))}
-                style={selectStyle}
-              >
-                {themes.map((t) => (
-                  <option
-                    key={t.theme_id}
-                    value={t.theme_id}
-                    style={{
-                      background: "var(--select-option-bg)",
-                      color: "var(--select-option-color)",
-                    }}
+              <div className="relative">
+                <select
+                  value={selectedThemeId ?? ""}
+                  onChange={(e) => handleThemeChange(parseInt(e.target.value))}
+                  style={selectStyle}
+                >
+                  {themes.map((t) => (
+                    <option
+                      key={t.theme_id}
+                      value={t.theme_id}
+                      style={{
+                        background: "var(--select-option-bg)",
+                        color: "var(--select-option-color)",
+                      }}
+                    >
+                      {t.theme_name}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    style={{ color: "var(--text-muted)" }}
                   >
-                    {t.theme_name}
-                  </option>
-                ))}
-              </select>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
 
             {/* Color scheme */}
@@ -219,24 +243,42 @@ const Preferences = ({ onNavigate, onLogout }) => {
               >
                 Esquema de colores
               </label>
-              <select
-                value={selectedColorId ?? ""}
-                onChange={(e) => handleColorChange(parseInt(e.target.value))}
-                style={selectStyle}
-              >
-                {colors.map((c) => (
-                  <option
-                    key={c.color_id}
-                    value={c.color_id}
-                    style={{
-                      background: "var(--select-option-bg)",
-                      color: "var(--select-option-color)",
-                    }}
+              <div className="relative">
+                <select
+                  value={selectedColorId ?? ""}
+                  onChange={(e) => handleColorChange(parseInt(e.target.value))}
+                  style={selectStyle}
+                >
+                  {colors.map((c) => (
+                    <option
+                      key={c.color_id}
+                      value={c.color_id}
+                      style={{
+                        background: "var(--select-option-bg)",
+                        color: "var(--select-option-color)",
+                      }}
+                    >
+                      {c.color_name}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    style={{ color: "var(--text-muted)" }}
                   >
-                    {c.color_name}
-                  </option>
-                ))}
-              </select>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
 
             {/* Buttons */}
@@ -253,18 +295,13 @@ const Preferences = ({ onNavigate, onLogout }) => {
                 <button
                   onClick={handleReset}
                   disabled={saving}
-                  style={{
-                    ...btnBase,
-                    background: "rgba(255,255,255,0.15)",
-                    flex: 1,
-                  }}
+                  style={btnStyle}
+                  className="px-8 py-3 font-semibold text-base rounded-2xl transition-all transform hover:scale-105 hover:shadow-2xl"
                   onMouseEnter={(e) =>
-                    (e.currentTarget.style.background =
-                      "rgba(255,255,255,0.30)")
+                    (e.currentTarget.style.background = "var(--glass-border)")
                   }
                   onMouseLeave={(e) =>
-                    (e.currentTarget.style.background =
-                      "rgba(255,255,255,0.15)")
+                    (e.currentTarget.style.background = "var(--glass-bg)")
                   }
                 >
                   Restablecer valores predeterminados
@@ -272,19 +309,13 @@ const Preferences = ({ onNavigate, onLogout }) => {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  style={{
-                    ...btnBase,
-                    background: "rgba(255,255,255,0.25)",
-                    fontWeight: 600,
-                    flex: 1,
-                  }}
+                  style={{ ...btnStyle, fontWeight: 600 }}
+                  className="px-8 py-3 font-semibold text-base rounded-2xl transition-all transform hover:scale-105 hover:shadow-2xl"
                   onMouseEnter={(e) =>
-                    (e.currentTarget.style.background =
-                      "rgba(255,255,255,0.40)")
+                    (e.currentTarget.style.background = "var(--glass-border)")
                   }
                   onMouseLeave={(e) =>
-                    (e.currentTarget.style.background =
-                      "rgba(255,255,255,0.25)")
+                    (e.currentTarget.style.background = "var(--glass-bg)")
                   }
                 >
                   {saving ? "Guardando..." : "Guardar cambios"}

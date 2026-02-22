@@ -11,7 +11,7 @@ const BackgroundAnimated = () => {
           left: "clamp(-10vw, -5vw, -3vw)",
           background:
             "linear-gradient(to bottom right, var(--color-1-from), var(--color-1-to))",
-          opacity: 0.40,
+          opacity: 0.35,
         }}
       />
 
@@ -27,7 +27,7 @@ const BackgroundAnimated = () => {
           height: "clamp(240px, 26vw, 500px)",
           background:
             "linear-gradient(to bottom right, var(--color-2-from), var(--color-2-to))",
-          opacity: 0.40,
+          opacity: 0.35,
         }}
       />
 
@@ -41,7 +41,7 @@ const BackgroundAnimated = () => {
           left: "clamp(36vw, 50vw, 56vw)",
           background:
             "linear-gradient(to bottom right, var(--color-3-from), var(--color-3-to))",
-          opacity: 0.40,
+          opacity: 0.35,
         }}
       />
 
@@ -55,7 +55,7 @@ const BackgroundAnimated = () => {
           right: "clamp(-6vw, -3vw, -1vw)",
           background:
             "linear-gradient(to bottom right, var(--color-4-from), var(--color-4-to))",
-          opacity: 0.40,
+          opacity: 0.35,
         }}
       />
     </div>

@@ -94,6 +94,106 @@
   --chart-tooltip-border: rgba(255, 255, 255, 0.6);
 }
 
+/* =============================================
+   COLOR SCHEME - Beige
+   ============================================= */
+[data-palette="beige"] {
+  --color-1-from: #e8dcc8;
+  --color-1-to: #d4c4a0;
+  --color-2-from: #f0e8d8;
+  --color-2-to: #ddd0b8;
+  --color-3-from: #c8b89a;
+  --color-3-to: #e0d4bc;
+  --color-4-from: #f5f0e8;
+  --color-4-to: #c8b89a;
+
+  --chart-1: rgba(232, 220, 200, 0.65);
+  --chart-2: rgba(212, 196, 160, 0.65);
+  --chart-3: rgba(240, 232, 216, 0.65);
+  --chart-4: rgba(200, 184, 154, 0.65);
+  --chart-5: rgba(224, 212, 188, 0.65);
+  --chart-6: rgba(245, 240, 232, 0.65);
+  --chart-grid: rgba(148, 163, 184, 0.18);
+  --chart-tick: #64748b;
+  --chart-tooltip-bg: rgba(255, 255, 255, 0.75);
+  --chart-tooltip-border: rgba(255, 255, 255, 0.6);
+}
+
+/* =============================================
+   COLOR SCHEME - Graphite
+   ============================================= */
+[data-palette="graphite"] {
+  --color-1-from: #2a2a2a;
+  --color-1-to: #1a1a1a;
+  --color-2-from: #3d3d3d;
+  --color-2-to: #2a2a2a;
+  --color-3-from: #555555;
+  --color-3-to: #3a3a3a;
+  --color-4-from: #1a1a1a;
+  --color-4-to: #4a4a4a;
+
+  --chart-1: rgba(42, 42, 42, 0.75);
+  --chart-2: rgba(26, 26, 26, 0.75);
+  --chart-3: rgba(61, 61, 61, 0.75);
+  --chart-4: rgba(42, 42, 42, 0.75);
+  --chart-5: rgba(85, 85, 85, 0.75);
+  --chart-6: rgba(74, 74, 74, 0.75);
+  --chart-grid: rgba(148, 163, 184, 0.18);
+  --chart-tick: #64748b;
+  --chart-tooltip-bg: rgba(255, 255, 255, 0.75);
+  --chart-tooltip-border: rgba(255, 255, 255, 0.6);
+}
+
+/* =============================================
+   COLOR SCHEME - Cyberpunk
+   ============================================= */
+[data-palette="cyberpunk"] {
+  --color-1-from: #d4f50a;
+  --color-1-to: #a8e800;
+  --color-2-from: #00e5ff;
+  --color-2-to: #00b8d9;
+  --color-3-from: #ff4da6;
+  --color-3-to: #d43d8a;
+  --color-4-from: #00a8c8;
+  --color-4-to: #007a96;
+
+  --chart-1: rgba(212, 245, 10, 0.70);
+  --chart-2: rgba(0, 229, 255, 0.70);
+  --chart-3: rgba(255, 77, 166, 0.70);
+  --chart-4: rgba(255, 0, 128, 0.70);
+  --chart-5: rgba(0, 168, 200, 0.70);
+  --chart-6: rgba(0, 184, 217, 0.70);
+  --chart-grid: rgba(148, 163, 184, 0.18);
+  --chart-tick: #64748b;
+  --chart-tooltip-bg: rgba(255, 255, 255, 0.75);
+  --chart-tooltip-border: rgba(255, 255, 255, 0.6);
+}
+
+/* =============================================
+   COLOR SCHEME - Apex
+   ============================================= */
+[data-palette="apex"] {
+  --color-1-from: #03354c;
+  --color-1-to: #031e2a;
+  --color-2-from: #ff0000;
+  --color-2-to: #bd0000;
+  --color-3-from: #1d6fa8;
+  --color-3-to: #0e4d8a;
+  --color-4-from: #6b7280;
+  --color-4-to: #4b5563;
+
+  --chart-1: rgba(3, 53, 76, 0.70);
+  --chart-2: rgba(107, 114, 128, 0.65);
+  --chart-3: rgba(29, 111, 168, 0.65);
+  --chart-4: rgba(189, 0, 0, 0.65);
+  --chart-5: rgba(45, 74, 110, 0.65);
+  --chart-6: rgba(255, 0, 0, 0.65);
+  --chart-grid: rgba(148, 163, 184, 0.18);
+  --chart-tick: #64748b;
+  --chart-tooltip-bg: rgba(255, 255, 255, 0.75);
+  --chart-tooltip-border: rgba(255, 255, 255, 0.6);
+}
+
 /* Dark mode chart overrides */
 [data-theme="dark"] {
   --chart-tick: #94a3b8;
