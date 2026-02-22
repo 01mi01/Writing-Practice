@@ -9,15 +9,7 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
   const [filteredVocabulary, setFilteredVocabulary] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [editingId, setEditingId] = useState(null);
   const [deleting, setDeleting] = useState(null);
-
-  const [word, setWord] = useState("");
-  const [definition, setDefinition] = useState("");
-  const [translation, setTranslation] = useState(""); 
-  const [category, setCategory] = useState("");
-  const [usage, setUsage] = useState("");
-  const [pronunciation, setPronunciation] = useState("");
 
   const navLinks = [
     { label: "Inicio", onClick: () => onNavigate("user-dashboard") },
@@ -60,10 +52,8 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
-
       const prefs = await prefsRes.json();
       const vocabData = await vocabRes.json();
-
       applyTheme(
         prefs?.theme?.theme_name ?? "light",
         prefs?.color?.color_name ?? "cold",
@@ -77,29 +67,8 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
     }
   };
 
-  const openAddForm = () => {
-    onNavigate("nueva-palabra");
-  };
-
-  const openEditForm = (vocab) => {
-    onNavigate(`editar-vocab-${vocab.vocab_id}`);
-  };
-
-  const closeForm = () => {
-    setShowForm(false);
-    setEditingId(null);
-    setWord("");
-    setDefinition("");
-    setTranslation("");
-    setCategory("");
-    setUsage("");
-    setPronunciation("");
-    setError("");
-  };
-
   const handleDelete = async (vocabId) => {
     if (!window.confirm("¿Eliminar esta palabra?")) return;
-
     setDeleting(vocabId);
     try {
       await fetch(`http://localhost:3000/api/vocabulary/${vocabId}`, {
@@ -114,16 +83,15 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
     }
   };
 
-  const truncate = (str, maxLen) => {
-    if (!str) return "";
-    return str.length > maxLen ? str.substring(0, maxLen) + "..." : str;
+  const inputStyle = {
+    background: "var(--glass-bg)",
+    backdropFilter: "var(--glass-blur)",
+    WebkitBackdropFilter: "var(--glass-blur)",
+    border: "1px solid var(--glass-border)",
+    color: "var(--text-primary)",
   };
 
-  const inputStyle = {
-    background: "rgba(255,255,255,0.35)",
-    backdropFilter: "blur(8px)",
-    WebkitBackdropFilter: "blur(8px)",
-    border: "1px solid rgba(255,255,255,0.5)",
+  const actionBtnStyle = {
     color: "var(--text-primary)",
   };
 
@@ -140,18 +108,15 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
 
       <section className="px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col">
+
           <h2
             className="text-2xl sm:text-3xl font-bold text-center mt-10 mb-8"
-            style={{
-              background:
-                "linear-gradient(to right, var(--text-primary), var(--text-secondary))",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
+            style={{ color: "var(--text-primary)" }}
           >
             Lista de vocabulario
           </h2>
 
+          {/* Search + add */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8 items-stretch sm:items-center">
             <div className="flex-1 relative">
               <input
@@ -165,18 +130,19 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
               <svg
                 className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4"
                 fill="none"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
                 stroke="currentColor"
                 strokeWidth="2"
-                viewBox="0 0 24 24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 style={{ color: "var(--text-muted)" }}
               >
-                <circle cx="11" cy="11" r="8" />
-                <path d="M21 21l-4.35-4.35" />
+                <path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" />
               </svg>
             </div>
-
             <button
-              onClick={openAddForm}
+              onClick={() => onNavigate("nueva-palabra")}
               className="px-5 py-3 font-semibold text-sm rounded-xl transition-all transform hover:scale-105 hover:shadow-2xl shadow-lg whitespace-nowrap"
               style={{
                 background: "var(--glass-bg)",
@@ -186,18 +152,22 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
                 boxShadow: "var(--glass-shadow)",
                 color: "var(--text-primary)",
               }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.background = "var(--glass-border)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.background = "var(--glass-bg)")
+              }
             >
               Agregar una nueva palabra
             </button>
           </div>
 
+          {/* Content */}
           {loading ? (
             <div className="flex justify-center py-20">
               <GlassCard className="px-10 py-8 shadow-2xl">
-                <p
-                  className="text-lg font-medium"
-                  style={{ color: "var(--text-secondary)" }}
-                >
+                <p className="text-lg font-medium" style={{ color: "var(--text-secondary)" }}>
                   Cargando...
                 </p>
               </GlassCard>
@@ -205,234 +175,164 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
           ) : filteredVocabulary.length === 0 ? (
             <div className="flex justify-center py-20">
               <GlassCard className="px-10 py-10 shadow-2xl text-center max-w-md">
-                <p
-                  className="text-lg font-medium mb-2"
-                  style={{ color: "var(--text-primary)" }}
-                >
-                  {searchQuery
-                    ? "No se encontraron palabras"
-                    : "Aún no tienes palabras"}
+                <p className="text-lg font-medium mb-2" style={{ color: "var(--text-primary)" }}>
+                  {searchQuery ? "No se encontraron palabras" : "Aún no tienes palabras"}
                 </p>
                 <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                  {searchQuery
-                    ? "Intenta con otra búsqueda"
-                    : "Agrega tu primera palabra con el botón de arriba"}
+                  {searchQuery ? "Intenta con otra búsqueda" : "Agrega tu primera palabra con el botón de arriba"}
                 </p>
               </GlassCard>
             </div>
           ) : (
-            <GlassCard className="p-6 shadow-2xl overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr
-                    className="border-b"
-                    style={{ borderColor: "var(--glass-border)" }}
-                  >
-                    <th
-                      className="text-left py-3 px-4 font-semibold"
-                      style={{
-                        color: "var(--text-primary)",
-                        fontSize: "0.9rem",
-                      }}
-                    >
-                      Palabra
-                    </th>
-                    <th
-                      className="text-left py-3 px-4 font-semibold"
-                      style={{
-                        color: "var(--text-primary)",
-                        fontSize: "0.9rem",
-                      }}
-                    >
-                      Definición
-                    </th>
-                    <th
-                      className="text-left py-3 px-4 font-semibold"
-                      style={{
-                        color: "var(--text-primary)",
-                        fontSize: "0.9rem",
-                      }}
-                    >
-                      Traducción
-                    </th>
-                    <th
-                      className="text-left py-3 px-4 font-semibold"
-                      style={{
-                        color: "var(--text-primary)",
-                        fontSize: "0.9rem",
-                      }}
-                    >
-                      Categoría
-                    </th>
-                    <th
-                      className="text-left py-3 px-4 font-semibold"
-                      style={{
-                        color: "var(--text-primary)",
-                        fontSize: "0.9rem",
-                      }}
-                    >
-                      Uso
-                    </th>
-                    <th
-                      className="text-left py-3 px-4 font-semibold"
-                      style={{
-                        color: "var(--text-primary)",
-                        fontSize: "0.9rem",
-                      }}
-                    >
-                      Pronunciación
-                    </th>
-                    <th
-                      className="text-right py-3 px-4 font-semibold"
-                      style={{
-                        color: "var(--text-primary)",
-                        fontSize: "0.9rem",
-                      }}
-                    >
-                      Acciones
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredVocabulary.map((vocab) => (
-                    <tr
-                      key={vocab.vocab_id}
-                      className="border-b transition-colors"
-                      style={{ borderColor: "var(--glass-border)" }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.background =
-                          "rgba(255,255,255,0.15)")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = "transparent")
-                      }
-                    >
-                      <td
-                        className="py-3 px-4 font-medium"
-                        style={{
-                          color: "var(--text-primary)",
-                          fontSize: "0.9rem",
-                        }}
-                      >
+            <>
+              {/* MOBILE — cards */}
+              <div className="flex flex-col gap-4 lg:hidden">
+                {filteredVocabulary.map((vocab) => (
+                  <GlassCard key={vocab.vocab_id} className="p-5 shadow-xl flex flex-col gap-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
                         {vocab.word}
-                      </td>
-                      <td
-                        className="py-3 px-4"
-                        style={{
-                          color: "var(--text-primary)",
-                          fontSize: "0.875rem",
-                          opacity: 0.85,
-                        }}
-                      >
-                        {vocab.definition || "—"}
-                      </td>
-                      <td
-                        className="py-3 px-4"
-                        style={{
-                          color: "var(--text-primary)",
-                          fontSize: "0.875rem",
-                          opacity: 0.85,
-                        }}
-                      >
-                        {vocab.translation || "—"}
-                      </td>
-                      <td
-                        className="py-3 px-4"
-                        style={{
-                          color: "var(--text-primary)",
-                          fontSize: "0.875rem",
-                          opacity: 0.8,
-                        }}
-                      >
-                        {vocab.category || "—"}
-                      </td>
-                      <td
-                        className="py-3 px-4"
-                        style={{
-                          color: "var(--text-primary)",
-                          fontSize: "0.875rem",
-                          opacity: 0.8,
-                        }}
-                      >
-                        {vocab.usage || "—"}
-                      </td>
-                      <td
-                        className="py-3 px-4 font-mono"
-                        style={{
-                          color: "var(--text-primary)",
-                          fontSize: "0.875rem",
-                          opacity: 0.8,
-                        }}
-                      >
-                        {vocab.pronunciation || "—"}
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <div className="flex gap-2 justify-end">
-                          <button
-                            onClick={() => openEditForm(vocab)}
-                            className="p-2 rounded-lg transition-colors"
-                            style={{ color: "var(--text-primary)" }}
-                            onMouseEnter={(e) =>
-                              (e.currentTarget.style.background =
-                                "rgba(255,255,255,0.20)")
-                            }
-                            onMouseLeave={(e) =>
-                              (e.currentTarget.style.background = "transparent")
-                            }
-                            title="Editar"
-                          >
-                            <svg
-                              width="18"
-                              height="18"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                              />
-                            </svg>
-                          </button>
-                          <button
-                            onClick={() => handleDelete(vocab.vocab_id)}
-                            disabled={deleting === vocab.vocab_id}
-                            className="p-2 rounded-lg transition-colors disabled:opacity-50"
-                            style={{ color: "var(--text-primary)" }}
-                            onMouseEnter={(e) =>
-                              !deleting &&
-                              (e.currentTarget.style.background =
-                                "rgba(255,255,255,0.20)")
-                            }
-                            onMouseLeave={(e) =>
-                              (e.currentTarget.style.background = "transparent")
-                            }
-                            title="Eliminar"
-                          >
-                            <svg
-                              width="18"
-                              height="18"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      </td>
+                      </p>
+                      <div className="flex gap-2 shrink-0">
+                        <button
+                          onClick={() => onNavigate(`editar-vocab-${vocab.vocab_id}`)}
+                          className="p-2 rounded-lg transition-all"
+                          style={actionBtnStyle}
+                          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--glass-border)")}
+                          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                          title="Editar"
+                        >
+                          <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(vocab.vocab_id)}
+                          disabled={deleting === vocab.vocab_id}
+                          className="p-2 rounded-lg transition-all disabled:opacity-50"
+                          style={actionBtnStyle}
+                          onMouseEnter={(e) => !deleting && (e.currentTarget.style.background = "var(--glass-border)")}
+                          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                          title="Eliminar"
+                        >
+                          <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    {vocab.definition && (
+                      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                        <span style={{ color: "var(--text-muted)" }}>Definición: </span>
+                        {vocab.definition}
+                      </p>
+                    )}
+                    {vocab.translation && (
+                      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                        <span style={{ color: "var(--text-muted)" }}>Traducción: </span>
+                        {vocab.translation}
+                      </p>
+                    )}
+                    <div className="flex flex-wrap gap-3">
+                      {vocab.category && (
+                        <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                          Categoría: <span style={{ color: "var(--text-secondary)" }}>{vocab.category}</span>
+                        </p>
+                      )}
+                      {vocab.usage && (
+                        <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                          Uso: <span style={{ color: "var(--text-secondary)" }}>{vocab.usage}</span>
+                        </p>
+                      )}
+                      {vocab.pronunciation && (
+                        <p className="text-xs font-mono" style={{ color: "var(--text-muted)" }}>
+                          {vocab.pronunciation}
+                        </p>
+                      )}
+                    </div>
+                  </GlassCard>
+                ))}
+              </div>
+
+              {/* DESKTOP — table */}
+              <GlassCard className="p-6 shadow-2xl hidden lg:block">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b" style={{ borderColor: "var(--glass-border)" }}>
+                      {["Palabra", "Definición", "Traducción", "Categoría", "Uso", "Pronunciación"].map((h) => (
+                        <th key={h} className="text-left py-3 px-4 font-semibold"
+                          style={{ color: "var(--text-primary)", fontSize: "0.9rem" }}>
+                          {h}
+                        </th>
+                      ))}
+                      <th className="text-right py-3 px-4 font-semibold"
+                        style={{ color: "var(--text-primary)", fontSize: "0.9rem" }}>
+                        Acciones
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </GlassCard>
+                  </thead>
+                  <tbody>
+                    {filteredVocabulary.map((vocab) => (
+                      <tr
+                        key={vocab.vocab_id}
+                        className="border-b transition-colors"
+                        style={{ borderColor: "var(--glass-border)" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "var(--glass-bg)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                      >
+                        <td className="py-3 px-4 font-medium" style={{ color: "var(--text-primary)", fontSize: "0.9rem" }}>
+                          {vocab.word}
+                        </td>
+                        <td className="py-3 px-4" style={{ color: "var(--text-secondary)", fontSize: "0.875rem" }}>
+                          {vocab.definition || "—"}
+                        </td>
+                        <td className="py-3 px-4" style={{ color: "var(--text-secondary)", fontSize: "0.875rem" }}>
+                          {vocab.translation || "—"}
+                        </td>
+                        <td className="py-3 px-4" style={{ color: "var(--text-secondary)", fontSize: "0.875rem" }}>
+                          {vocab.category || "—"}
+                        </td>
+                        <td className="py-3 px-4" style={{ color: "var(--text-secondary)", fontSize: "0.875rem" }}>
+                          {vocab.usage || "—"}
+                        </td>
+                        <td className="py-3 px-4 font-mono" style={{ color: "var(--text-secondary)", fontSize: "0.875rem" }}>
+                          {vocab.pronunciation || "—"}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <div className="flex gap-2 justify-end">
+                            <button
+                              onClick={() => onNavigate(`editar-vocab-${vocab.vocab_id}`)}
+                              className="p-2 rounded-lg transition-all"
+                              style={actionBtnStyle}
+                              onMouseEnter={(e) => (e.currentTarget.style.background = "var(--glass-border)")}
+                              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                              title="Editar"
+                            >
+                              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => handleDelete(vocab.vocab_id)}
+                              disabled={deleting === vocab.vocab_id}
+                              className="p-2 rounded-lg transition-all disabled:opacity-50"
+                              style={actionBtnStyle}
+                              onMouseEnter={(e) => !deleting && (e.currentTarget.style.background = "var(--glass-border)")}
+                              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                              title="Eliminar"
+                            >
+                              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </GlassCard>
+            </>
           )}
         </div>
       </section>
