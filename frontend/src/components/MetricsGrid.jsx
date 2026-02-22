@@ -56,7 +56,7 @@ export const ChartCard = ({ label, children }) => (
 );
 
 const CustomPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percentage }) => {
-  if (parseFloat(percentage) < 4) return null;
+  if (parseFloat(percentage) < 40) return null;
   const RADIAN = Math.PI / 180;
   const radius = innerRadius + (outerRadius - innerRadius) * 0.58;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
