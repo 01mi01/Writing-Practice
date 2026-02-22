@@ -5,14 +5,6 @@ import BackgroundStatic from "../components/BackgroundStatic";
 import UserMetricsGrid from "../components/UserMetricsGrid";
 import { applyTheme } from "../utils/applyTheme";
 
-const btnStyle = {
-  background: "rgba(255,255,255,0.15)",
-  backdropFilter: "blur(16px)",
-  WebkitBackdropFilter: "blur(16px)",
-  border: "1px solid rgba(255,255,255,0.50)",
-  boxShadow: "0 4px 24px rgba(255,255,255,0.10)",
-};
-
 const UserDashboard = ({ onNavigate, onLogout }) => {
   const [user, setUser] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
@@ -65,6 +57,15 @@ const UserDashboard = ({ onNavigate, onLogout }) => {
 
   const summary = dashboardData?.summary;
 
+  const btnStyle = {
+    background: "var(--glass-bg)",
+    backdropFilter: "var(--glass-blur)",
+    WebkitBackdropFilter: "var(--glass-blur)",
+    border: "1px solid var(--glass-border)",
+    boxShadow: "var(--glass-shadow)",
+    color: "var(--text-primary)",
+  };
+
   return (
     <div
       className="min-h-screen relative overflow-hidden pb-16"
@@ -79,30 +80,25 @@ const UserDashboard = ({ onNavigate, onLogout }) => {
       <section className="px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col gap-5 mt-10">
           {/* Hero welcome card */}
-          <GlassCard className="px-8 sm:px-14 py-10 sm:py-14 shadow-2xl text-center flex flex-col items-center gap-8">
-            {/* Welcome + username same size, same line */}
+          <GlassCard className="px-6 sm:px-14 py-10 sm:py-14 shadow-2xl text-center flex flex-col items-center gap-8">
+            {/* Welcome + username */}
             <div className="flex flex-wrap items-baseline justify-center gap-3">
               <h2
-                className="text-2xl sm:text-3xl font-bold"
+                className="text-3xl sm:text-4xl font-bold"
                 style={{ color: "var(--text-primary)" }}
               >
-                Bienvenido,
+                Hola,
               </h2>
               <h2
-                className="text-2xl sm:text-3xl font-bold"
-                style={{
-                  background:
-                    "linear-gradient(to right, var(--color-1-from), var(--color-1-to))",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
+                className="text-3xl sm:text-4xl font-bold"
+                style={{ color: "var(--text-primary)" }}
               >
                 {user?.username ?? ""}
               </h2>
             </div>
 
             {/* 4 stat numbers */}
-            <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8">
+            <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
               {[
                 {
                   label: "Palabras escritas",
@@ -127,10 +123,10 @@ const UserDashboard = ({ onNavigate, onLogout }) => {
               ].map((stat) => (
                 <div
                   key={stat.label}
-                  className="flex flex-col gap-1 items-center sm:items-start"
+                  className="flex flex-col gap-1 items-center"
                 >
                   <p
-                    className="text-xs sm:text-sm font-medium text-center sm:text-left"
+                    className="text-sm sm:text-base font-medium text-center"
                     style={{ color: "var(--text-primary)", opacity: 0.7 }}
                   >
                     {stat.label}
@@ -139,7 +135,7 @@ const UserDashboard = ({ onNavigate, onLogout }) => {
                     className="font-bold"
                     style={{
                       color: "var(--text-primary)",
-                      fontSize: "clamp(1.5rem, 3.5vw, 2.6rem)",
+                      fontSize: "clamp(2rem, 5vw, 2.8rem)",
                       lineHeight: 1.1,
                     }}
                   >
@@ -158,23 +154,16 @@ const UserDashboard = ({ onNavigate, onLogout }) => {
             </div>
 
             {/* Action buttons */}
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-row gap-3">
               <button
-                onClick={() => onNavigate("mis-textos")}
+                onClick={() => onNavigate("nueva-entrada")}
                 className="px-8 py-3 font-semibold text-base rounded-2xl transition-all transform hover:scale-105 hover:shadow-2xl"
-                style={{
-                  background: "rgba(255,255,255,0.15)",
-                  backdropFilter: "blur(16px)",
-                  WebkitBackdropFilter: "blur(16px)",
-                  border: "1px solid rgba(255,255,255,0.50)",
-                  boxShadow: "0 4px 24px rgba(255,255,255,0.10)",
-                  color: "var(--text-primary)",
-                }}
+                style={btnStyle}
                 onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "rgba(255,255,255,0.30)")
+                  (e.currentTarget.style.background = "var(--glass-border)")
                 }
                 onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "rgba(255,255,255,0.15)")
+                  (e.currentTarget.style.background = "var(--glass-bg)")
                 }
               >
                 Nueva entrada
@@ -182,19 +171,12 @@ const UserDashboard = ({ onNavigate, onLogout }) => {
               <button
                 onClick={() => onNavigate("vocabulario")}
                 className="px-8 py-3 font-semibold text-base rounded-2xl transition-all transform hover:scale-105 hover:shadow-2xl"
-                style={{
-                  background: "rgba(255,255,255,0.15)",
-                  backdropFilter: "blur(16px)",
-                  WebkitBackdropFilter: "blur(16px)",
-                  border: "1px solid rgba(255,255,255,0.50)",
-                  boxShadow: "0 4px 24px rgba(255,255,255,0.10)",
-                  color: "var(--text-primary)",
-                }}
+                style={btnStyle}
                 onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "rgba(255,255,255,0.30)")
+                  (e.currentTarget.style.background = "var(--glass-border)")
                 }
                 onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "rgba(255,255,255,0.15)")
+                  (e.currentTarget.style.background = "var(--glass-bg)")
                 }
               >
                 Vocabulario
@@ -204,10 +186,10 @@ const UserDashboard = ({ onNavigate, onLogout }) => {
 
           {/* Section title */}
           <h3
-            className="text-xl sm:text-2xl font-bold mt-4"
+            className="text-2xl sm:text-3xl font-bold mt-4"
             style={{ color: "var(--text-primary)" }}
           >
-            Panel de seguimiento
+            Dashboard
           </h3>
 
           {/* Metrics grid */}

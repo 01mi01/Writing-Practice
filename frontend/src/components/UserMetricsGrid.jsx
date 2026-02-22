@@ -7,15 +7,15 @@ import { useState } from "react";
 import { CHART_COLORS, glassTooltip } from "./MetricsGrid";
 
 const cardHeight = "min-h-[240px]";
-const tickStyle = { fill: "var(--chart-tick)", fontSize: 11 };
+const tickStyle = { fill: "var(--text-muted)", fontSize: 14 };
 const gridStroke = "var(--chart-grid)";
 
 const StatCard = ({ label, value, unit }) => (
   <GlassCard className={`p-6 shadow-xl flex flex-col gap-3 ${cardHeight}`}>
-    <p className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+    <p className="text-base font-medium" style={{ color: "var(--text-secondary)" }}>
       {label}
     </p>
-    <p className="font-bold" style={{ color: "var(--text-primary)", fontSize: "clamp(1.6rem, 3vw, 2.4rem)", lineHeight: 1.1 }}>
+    <p className="font-bold" style={{ color: "var(--text-primary)", fontSize: "clamp(2rem, 3.5vw, 2.8rem)", lineHeight: 1.1 }}>
       {value ?? 0}
       {unit && (
         <span className="text-base font-medium ml-1" style={{ color: "var(--text-muted)" }}>
@@ -28,7 +28,7 @@ const StatCard = ({ label, value, unit }) => (
 
 const ChartCard = ({ label, children }) => (
   <GlassCard className={`p-5 shadow-xl flex flex-col gap-3 ${cardHeight}`}>
-    <p className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+    <p className="text-base font-medium" style={{ color: "var(--text-secondary)" }}>
       {label}
     </p>
     <div className="flex-1 w-full" style={{ minHeight: "185px" }}>
@@ -59,7 +59,7 @@ const periodSelectStyle = {
   color: "var(--text-primary)",
   borderRadius: "10px",
   padding: "4px 10px",
-  fontSize: "12px",
+  fontSize: "13px",
   outline: "none",
   cursor: "pointer",
 };
@@ -112,14 +112,21 @@ const UserMetricsGrid = ({ data }) => {
 
         <GlassCard className={`p-5 shadow-xl flex flex-col gap-3 ${cardHeight}`}>
           <div className="flex items-center justify-between">
-            <p className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-base font-medium" style={{ color: "var(--text-secondary)" }}>
               Frecuencia de uso
             </p>
-            <select value={freqPeriod} onChange={(e) => setFreqPeriod(e.target.value)} style={periodSelectStyle}>
-              <option value="week">Semana</option>
-              <option value="month">Mes</option>
-              <option value="year">Año</option>
+            <div className="relative">
+              <select value={freqPeriod} onChange={(e) => setFreqPeriod(e.target.value)} className="appearance-none pr-7" style={periodSelectStyle}>
+              <option value="week" style={{ background: "var(--select-option-bg)", color: "var(--select-option-color)" }}>Semana</option>
+              <option value="month" style={{ background: "var(--select-option-bg)", color: "var(--select-option-color)" }}>Mes</option>
+              <option value="year" style={{ background: "var(--select-option-bg)", color: "var(--select-option-color)" }}>Año</option>
             </select>
+              <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: "var(--text-muted)" }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
           </div>
           <div className="flex-1 w-full" style={{ minHeight: "185px" }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -151,7 +158,7 @@ const UserMetricsGrid = ({ data }) => {
               </Pie>
               <Tooltip {...glassTooltip} formatter={(val) => [`${val}%`, ""]} />
               <Legend iconType="circle" iconSize={8}
-                wrapperStyle={{ fontSize: 12, color: "var(--text-secondary)" }} />
+                wrapperStyle={{ fontSize: 13, color: "var(--text-secondary)" }} />
             </PieChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -166,8 +173,8 @@ const UserMetricsGrid = ({ data }) => {
               <XAxis dataKey="period" tick={tickStyle} axisLine={false} tickLine={false} />
               <YAxis tick={tickStyle} axisLine={false} tickLine={false} />
               <Tooltip {...glassTooltip} />
-              <Line type="monotone" dataKey="total" stroke="var(--chart-1)" strokeWidth={2.5}
-                dot={{ fill: "var(--chart-1)", r: 4, strokeWidth: 0 }}
+              <Line type="monotone" dataKey="total" stroke="var(--chart-3)" strokeWidth={2.5}
+                dot={{ fill: "var(--chart-2)", r: 4, strokeWidth: 0 }}
                 activeDot={{ r: 6, strokeWidth: 0 }} />
             </LineChart>
           </ResponsiveContainer>
@@ -181,7 +188,7 @@ const UserMetricsGrid = ({ data }) => {
               <YAxis tick={tickStyle} axisLine={false} tickLine={false} />
               <Tooltip {...glassTooltip} />
               <Line type="monotone" dataKey="errors" stroke="var(--chart-5)" strokeWidth={2.5}
-                dot={{ fill: "var(--chart-5)", r: 4, strokeWidth: 0 }}
+                dot={{ fill: "var(--chart-4)", r: 4, strokeWidth: 0 }}
                 activeDot={{ r: 6, strokeWidth: 0 }} />
             </LineChart>
           </ResponsiveContainer>
