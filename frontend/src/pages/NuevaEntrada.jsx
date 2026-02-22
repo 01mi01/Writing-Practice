@@ -14,7 +14,7 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
   const [targetWords, setTargetWords] = useState(350);
   const [editingTarget, setEditingTarget] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [saveResult, setSaveResult] = useState(null); // { suggestions, spell_check, text }
+  const [saveResult, setSaveResult] = useState(null);
   const [error, setError] = useState("");
 
   const titleInputRef = useRef(null);
@@ -97,8 +97,8 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
   };
 
   const selectedTypeName = textTypes.find((t) => t.type_id === parseInt(textTypeId))?.type_name ?? "";
-
   const progressPct = Math.min((wordCount / targetWords) * 100, 100);
+  const misspelledWords = saveResult?.spell_check?.errors?.map((e) => e.word) ?? [];
 
   return (
     <div
@@ -140,7 +140,7 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
               onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-muted)"}
               title="Editar título"
             >
-              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 11l6-6 3.536 3.536-6 6H9v-3.536z" />
               </svg>
             </button>
@@ -155,6 +155,13 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Comienza a escribir aquí…"
+                spellCheck={false}
+                autoCorrect="off"
+                autoCapitalize="off"
+                autoComplete="off"
+                data-gramm="false"
+                data-gramm_editor="false"
+                data-enable-grammarly="false"
                 className="flex-1 w-full bg-transparent outline-none resize-none text-base leading-relaxed"
                 style={{ color: "var(--text-primary)", minHeight: "480px" }}
               />
@@ -196,7 +203,7 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
                       <button onClick={() => setEditingType(true)} style={{ color: "var(--text-muted)" }}
                         onMouseEnter={(e) => e.currentTarget.style.color = "var(--text-primary)"}
                         onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-muted)"}>
-                        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 11l6-6 3.536 3.536-6 6H9v-3.536z" />
                         </svg>
                       </button>
@@ -227,7 +234,7 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
                       <button onClick={() => setEditingTarget(true)} style={{ color: "var(--text-muted)" }}
                         onMouseEnter={(e) => e.currentTarget.style.color = "var(--text-primary)"}
                         onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-muted)"}>
-                        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 11l6-6 3.536 3.536-6 6H9v-3.536z" />
                         </svg>
                       </button>
@@ -237,10 +244,7 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
                   <div className="w-full rounded-full overflow-hidden mt-1" style={{ height: "4px", background: "var(--glass-border)" }}>
                     <div
                       className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${progressPct}%`,
-                        background: "linear-gradient(to right, var(--color-1-from), var(--color-1-to))",
-                      }}
+                      style={{ width: `${progressPct}%`, background: "var(--color-1-from)" }}
                     />
                   </div>
                 </div>
@@ -259,6 +263,29 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
                     </p>
                   ))}
                 </div>
+
+                {/* Misspelled words */}
+                {saveResult && (
+                  <div className="flex flex-col gap-2">
+                    <h4 className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+                      Palabras mal escritas
+                    </h4>
+                    {misspelledWords.length > 0 ? (
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {misspelledWords.map((word, i) => (
+                          <span key={i} className="text-xs px-2 py-0.5 rounded-lg"
+                            style={{ background: "var(--glass-bg)", border: "1px solid var(--glass-border)", color: "var(--text-primary)" }}>
+                            {word}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                        Sin errores ortográficos.
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 {/* Suggestions */}
                 <div className="flex flex-col gap-2">
@@ -301,27 +328,33 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
                   <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                    className="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all transform hover:scale-105 hover:shadow-xl"
                     style={{
-                      background: "rgba(255,255,255,0.25)",
-                      border: "1px solid rgba(255,255,255,0.5)",
+                      background: "var(--glass-bg)",
+                      backdropFilter: "var(--glass-blur)",
+                      WebkitBackdropFilter: "var(--glass-blur)",
+                      border: "1px solid var(--glass-border)",
+                      boxShadow: "var(--glass-shadow)",
                       color: "var(--text-primary)",
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.40)"}
-                    onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.25)"}
+                    onMouseEnter={(e) => e.currentTarget.style.background = "var(--glass-border)"}
+                    onMouseLeave={(e) => e.currentTarget.style.background = "var(--glass-bg)"}
                   >
                     {saving ? "Guardando..." : "Guardar"}
                   </button>
                   <button
                     onClick={() => onNavigate("mis-textos")}
-                    className="flex-1 py-2.5 rounded-xl text-sm font-medium transition-all"
+                    className="flex-1 py-2.5 rounded-xl text-sm font-medium transition-all transform hover:scale-105 hover:shadow-xl"
                     style={{
-                      background: "rgba(255,255,255,0.10)",
-                      border: "1px solid rgba(255,255,255,0.3)",
+                      background: "var(--glass-bg)",
+                      backdropFilter: "var(--glass-blur)",
+                      WebkitBackdropFilter: "var(--glass-blur)",
+                      border: "1px solid var(--glass-border)",
+                      boxShadow: "var(--glass-shadow)",
                       color: "var(--text-muted)",
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.20)"}
-                    onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.10)"}
+                    onMouseEnter={(e) => e.currentTarget.style.background = "var(--glass-border)"}
+                    onMouseLeave={(e) => e.currentTarget.style.background = "var(--glass-bg)"}
                   >
                     Cancelar
                   </button>

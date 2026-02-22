@@ -37,11 +37,11 @@ const Landing = ({ onNavigate }) => {
             onClick={() => onNavigate("register")}
             className="px-8 py-4 text-gray-700 font-semibold text-base sm:text-lg rounded-2xl transition-all transform hover:scale-105 hover:shadow-2xl shadow-lg"
             style={{
-              background: "rgba(255, 255, 255, 0.15)",
-              backdropFilter: "blur(16px)",
-              WebkitBackdropFilter: "blur(16px)",
-              border: "1px solid rgba(255, 255, 255, 0.50)",
-              boxShadow: "0 4px 24px rgba(255, 255, 255, 0.10)",
+              background: "var(--glass-bg)",
+              backdropFilter: "var(--glass-blur)",
+              WebkitBackdropFilter: "var(--glass-blur)",
+              border: "1px solid var(--glass-border)",
+              boxShadow: "var(--glass-shadow)",
             }}
           >
             Comenzar ahora
