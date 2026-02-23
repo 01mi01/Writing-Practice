@@ -13,10 +13,66 @@ const btnStyle = {
   color: "var(--text-primary)",
 };
 
+const ConfirmModal = ({ textTitle, onConfirm, onCancel }) => (
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center px-4"
+    style={{
+      background: "rgba(0,0,0,0.35)",
+      backdropFilter: "blur(6px)",
+      WebkitBackdropFilter: "blur(6px)",
+    }}
+  >
+    <GlassCard className="px-8 py-8 shadow-2xl max-w-sm w-full flex flex-col gap-5 text-center">
+      <p className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
+        ¿Eliminar entrada?
+      </p>
+      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+        Se eliminará permanentemente{" "}
+        <span
+          className="font-semibold"
+          style={{ color: "var(--text-primary)" }}
+        >
+          "{textTitle}"
+        </span>
+        . Esta acción no se puede deshacer.
+      </p>
+      <div className="flex gap-3">
+        <button
+          onClick={onCancel}
+          className="flex-1 py-2.5 rounded-xl text-sm font-medium transition-all transform hover:scale-105"
+          style={btnStyle}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.background = "var(--glass-border)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.background = "var(--glass-bg)")
+          }
+        >
+          Cancelar
+        </button>
+        <button
+          onClick={onConfirm}
+          className="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all transform hover:scale-105"
+          style={btnStyle}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.background = "var(--glass-border)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.background = "var(--glass-bg)")
+          }
+        >
+          Eliminar
+        </button>
+      </div>
+    </GlassCard>
+  </div>
+);
+
 const MisTextos = ({ onNavigate, onLogout }) => {
   const [texts, setTexts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(null);
+  const [confirmTarget, setConfirmTarget] = useState(null);
 
   const navLinks = [
     { label: "Inicio", onClick: () => onNavigate("user-dashboard") },
@@ -32,10 +88,10 @@ const MisTextos = ({ onNavigate, onLogout }) => {
     const fetchPrefsAndTexts = async () => {
       try {
         const [prefsRes, textsRes] = await Promise.all([
-          fetch("http://localhost:3000/api/preferences", {
+          fetch(`http://localhost:3000/api/preferences`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch("http://localhost:3000/api/texts", {
+          fetch(`http://localhost:3000/api/texts`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -55,15 +111,16 @@ const MisTextos = ({ onNavigate, onLogout }) => {
     fetchPrefsAndTexts();
   }, []);
 
-  const handleDelete = async (textId) => {
-    if (!window.confirm("¿Eliminar esta entrada?")) return;
-    setDeleting(textId);
+  const handleDeleteConfirmed = async () => {
+    const { id } = confirmTarget;
+    setConfirmTarget(null);
+    setDeleting(id);
     try {
-      await fetch(`http://localhost:3000/api/texts/${textId}`, {
+      await fetch(`http://localhost:3000/api/texts/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
-      setTexts((prev) => prev.filter((t) => t.text_id !== textId));
+      setTexts((prev) => prev.filter((t) => t.text_id !== id));
     } catch (err) {
       console.error(err);
     } finally {
@@ -86,20 +143,26 @@ const MisTextos = ({ onNavigate, onLogout }) => {
           "linear-gradient(135deg, var(--bg-gradient-from), var(--bg-gradient-via), var(--bg-gradient-to))",
       }}
     >
+      {confirmTarget && (
+        <ConfirmModal
+          textTitle={confirmTarget.title}
+          onConfirm={handleDeleteConfirmed}
+          onCancel={() => setConfirmTarget(null)}
+        />
+      )}
+
       <BackgroundAnimated />
       <Navbar links={navLinks} activePage="Mis textos" />
 
       <section className="px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col">
-          {/* Title */}
           <h2
             className="text-2xl sm:text-3xl font-bold text-center mt-10 mb-6"
             style={{ color: "var(--text-primary)" }}
           >
-            Mis entradas de texto
+            Mis textos
           </h2>
 
-          {/* Action buttons */}
           <div className="flex gap-3 justify-center mb-10">
             <button
               onClick={() => onNavigate("nueva-entrada")}
@@ -129,7 +192,6 @@ const MisTextos = ({ onNavigate, onLogout }) => {
             </button>
           </div>
 
-          {/* Content */}
           {loading ? (
             <div className="flex justify-center py-20">
               <GlassCard className="px-10 py-8 shadow-2xl">
@@ -162,7 +224,6 @@ const MisTextos = ({ onNavigate, onLogout }) => {
                   key={text.text_id}
                   className="p-6 shadow-xl flex flex-col gap-4"
                 >
-                  {/* Header: title + type badge */}
                   <div className="flex items-start justify-between gap-2">
                     <p
                       className="text-sm font-semibold leading-snug"
@@ -191,7 +252,6 @@ const MisTextos = ({ onNavigate, onLogout }) => {
                     )}
                   </div>
 
-                  {/* Metrics */}
                   <div className="flex flex-col gap-1">
                     {[
                       { label: "Palabras escritas", value: text.word_count },
@@ -226,7 +286,6 @@ const MisTextos = ({ onNavigate, onLogout }) => {
                     ))}
                   </div>
 
-                  {/* Dates */}
                   <div className="flex flex-col gap-1">
                     <p
                       className="text-xs"
@@ -248,19 +307,11 @@ const MisTextos = ({ onNavigate, onLogout }) => {
                     </p>
                   </div>
 
-                  {/* Actions */}
                   <div className="flex gap-2 mt-auto pt-2">
                     <button
                       onClick={() => onNavigate(`editar-texto-${text.text_id}`)}
                       className="flex-1 py-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 hover:shadow-xl"
-                      style={{
-                        background: "var(--glass-bg)",
-                        backdropFilter: "var(--glass-blur)",
-                        WebkitBackdropFilter: "var(--glass-blur)",
-                        border: "1px solid var(--glass-border)",
-                        boxShadow: "var(--glass-shadow)",
-                        color: "var(--text-primary)",
-                      }}
+                      style={btnStyle}
                       onMouseEnter={(e) =>
                         (e.currentTarget.style.background =
                           "var(--glass-border)")
@@ -272,15 +323,16 @@ const MisTextos = ({ onNavigate, onLogout }) => {
                       Editar
                     </button>
                     <button
-                      onClick={() => handleDelete(text.text_id)}
+                      onClick={() =>
+                        setConfirmTarget({
+                          id: text.text_id,
+                          title: text.title,
+                        })
+                      }
                       disabled={deleting === text.text_id}
                       className="flex-1 py-2 rounded-xl text-sm font-medium transition-all transform hover:scale-105 hover:shadow-xl"
                       style={{
-                        background: "var(--glass-bg)",
-                        backdropFilter: "var(--glass-blur)",
-                        WebkitBackdropFilter: "var(--glass-blur)",
-                        border: "1px solid var(--glass-border)",
-                        boxShadow: "var(--glass-shadow)",
+                        ...btnStyle,
                         color:
                           deleting === text.text_id
                             ? "var(--text-muted)"

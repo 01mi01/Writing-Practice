@@ -4,12 +4,62 @@ import Navbar from "../components/Navbar";
 import BackgroundStatic from "../components/BackgroundStatic";
 import { applyTheme } from "../utils/applyTheme";
 
+const btnStyle = {
+  background: "var(--glass-bg)",
+  backdropFilter: "var(--glass-blur)",
+  WebkitBackdropFilter: "var(--glass-blur)",
+  border: "1px solid var(--glass-border)",
+  boxShadow: "var(--glass-shadow)",
+  color: "var(--text-primary)",
+};
+
+const ConfirmModal = ({ word, onConfirm, onCancel }) => (
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center px-4"
+    style={{ background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }}
+  >
+    <GlassCard className="px-8 py-8 shadow-2xl max-w-sm w-full flex flex-col gap-5 text-center">
+      <p className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
+        ¿Eliminar palabra?
+      </p>
+      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+        Se eliminará permanentemente{" "}
+        <span className="font-semibold" style={{ color: "var(--text-primary)" }}>
+          "{word}"
+        </span>
+        . Esta acción no se puede deshacer.
+      </p>
+      <div className="flex gap-3">
+        <button
+          onClick={onCancel}
+          className="flex-1 py-2.5 rounded-xl text-sm font-medium transition-all transform hover:scale-105"
+          style={btnStyle}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--glass-border)")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "var(--glass-bg)")}
+        >
+          Cancelar
+        </button>
+        <button
+          onClick={onConfirm}
+          className="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all transform hover:scale-105"
+          style={btnStyle}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--glass-border)")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "var(--glass-bg)")}
+        >
+          Eliminar
+        </button>
+      </div>
+    </GlassCard>
+  </div>
+);
+
 const Vocabulario = ({ onNavigate, onLogout }) => {
   const [vocabulary, setVocabulary] = useState([]);
   const [filteredVocabulary, setFilteredVocabulary] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [deleting, setDeleting] = useState(null);
+  const [confirmTarget, setConfirmTarget] = useState(null);
 
   const navLinks = [
     { label: "Inicio", onClick: () => onNavigate("user-dashboard") },
@@ -67,15 +117,16 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
     }
   };
 
-  const handleDelete = async (vocabId) => {
-    if (!window.confirm("¿Eliminar esta palabra?")) return;
-    setDeleting(vocabId);
+  const handleDeleteConfirmed = async () => {
+    const { id } = confirmTarget;
+    setConfirmTarget(null);
+    setDeleting(id);
     try {
-      await fetch(`http://localhost:3000/api/vocabulary/${vocabId}`, {
+      await fetch(`http://localhost:3000/api/vocabulary/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
-      setVocabulary((prev) => prev.filter((v) => v.vocab_id !== vocabId));
+      setVocabulary((prev) => prev.filter((v) => v.vocab_id !== id));
     } catch (err) {
       console.error(err);
     } finally {
@@ -103,6 +154,14 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
           "linear-gradient(135deg, var(--bg-gradient-from), var(--bg-gradient-via), var(--bg-gradient-to))",
       }}
     >
+      {confirmTarget && (
+        <ConfirmModal
+          word={confirmTarget.word}
+          onConfirm={handleDeleteConfirmed}
+          onCancel={() => setConfirmTarget(null)}
+        />
+      )}
+
       <BackgroundStatic />
       <Navbar links={navLinks} activePage="Vocabulario" />
 
@@ -116,7 +175,6 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
             Lista de vocabulario
           </h2>
 
-          {/* Search + add */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8 items-stretch sm:items-center">
             <div className="flex-1 relative">
               <input
@@ -144,26 +202,14 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
             <button
               onClick={() => onNavigate("nueva-palabra")}
               className="px-5 py-3 font-semibold text-sm rounded-xl transition-all transform hover:scale-105 hover:shadow-2xl shadow-lg whitespace-nowrap"
-              style={{
-                background: "var(--glass-bg)",
-                backdropFilter: "var(--glass-blur)",
-                WebkitBackdropFilter: "var(--glass-blur)",
-                border: "1px solid var(--glass-border)",
-                boxShadow: "var(--glass-shadow)",
-                color: "var(--text-primary)",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.background = "var(--glass-border)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.background = "var(--glass-bg)")
-              }
+              style={btnStyle}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "var(--glass-border)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "var(--glass-bg)")}
             >
               Agregar una nueva palabra
             </button>
           </div>
 
-          {/* Content */}
           {loading ? (
             <div className="flex justify-center py-20">
               <GlassCard className="px-10 py-8 shadow-2xl">
@@ -207,7 +253,7 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
                           </svg>
                         </button>
                         <button
-                          onClick={() => handleDelete(vocab.vocab_id)}
+                          onClick={() => setConfirmTarget({ id: vocab.vocab_id, word: vocab.word })}
                           disabled={deleting === vocab.vocab_id}
                           className="p-2 rounded-lg transition-all disabled:opacity-50"
                           style={actionBtnStyle}
@@ -313,7 +359,7 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
                               </svg>
                             </button>
                             <button
-                              onClick={() => handleDelete(vocab.vocab_id)}
+                              onClick={() => setConfirmTarget({ id: vocab.vocab_id, word: vocab.word })}
                               disabled={deleting === vocab.vocab_id}
                               className="p-2 rounded-lg transition-all disabled:opacity-50"
                               style={actionBtnStyle}
