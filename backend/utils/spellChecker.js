@@ -20,75 +20,54 @@ const initializeDictionary = () => {
 const checkSpelling = (text, userVocabulary = []) => {
   const dict = initializeDictionary();
 
-  // Normalize user vocabulary to lowercase for case-insensitive comparison
-  const vocabSet = new Set(
-    userVocabulary.map((word) => word.toLowerCase().trim()),
-  );
+  const normalizeStr = (s) => s.toLowerCase().trim().normalize("NFC");
 
-  // Normalize fancy apostrophes to regular ones
-  let normalizedText = text.replace(/'/g, "'");
+  const vocabSet = new Set(userVocabulary.map((word) => normalizeStr(word)));
 
-  // Remove multi-word vocabulary phrases from text before checking individual words
+  let normalizedText = text.replace(/'/g, "'").normalize("NFC");
+
   let textToCheck = normalizedText;
+
   const multiWordVocab = userVocabulary.filter(
     (v) => v.includes(" ") || v.includes("-"),
   );
+
   multiWordVocab.forEach((phrase) => {
-    const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const regex = new RegExp(
-      `(?:^|[\\s])${escapedPhrase}(?=[\\s]|[.,!?;:]|$)`,
-      "gi",
-    );
-    textToCheck = textToCheck.replace(regex, " "); // Replace phrase with space
+    const normalizedPhrase = phrase.normalize("NFC");
+    const escapedPhrase = normalizedPhrase
+      .toLowerCase()
+      .trim()
+      .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(`(?:^|[\\s])${escapedPhrase}(?=[\\s]|[.,!?;:]|$)`, "gi");
+    textToCheck = textToCheck.replace(regex, (match) => " ".repeat(match.length));
   });
 
-  // Remove punctuation but keep:
-  // - letters (a-z, A-Z)
-  // - apostrophes (')
-  // - hyphens (-)
-  // - accented characters (Latin Unicode: À-ÿ, Ā-ſ, etc.)
   const cleanedText = textToCheck.replace(
     /[^a-zA-Z'\-\u00C0-\u00FF\u0100-\u017F\s]/g,
     " ",
   );
 
-  // Split into words (by spaces only, keep hyphens within words)
   const words = cleanedText
     .split(/\s+/)
     .filter((word) => word.length > 0)
     .filter((word) => /[a-zA-Z\u00C0-\u00FF\u0100-\u017F]/.test(word))
-    .filter((word) => {
-      // Skip hyphenated words completely (they're compound words, not individual words)
-      if (word.includes("-")) {
-        return false;
-      }
-      return true;
-    });
+    .filter((word) => !word.includes("-"));
 
   const errors = [];
   const misspelledWords = [];
 
   for (const word of words) {
-    const cleanWord = word.toLowerCase().trim();
+    const cleanWord = normalizeStr(word);
 
-    // Skip if word is in user's vocabulary (case-insensitive)
-    if (vocabSet.has(cleanWord)) {
-      continue;
-    }
+    if (vocabSet.has(cleanWord)) continue;
 
-    // Skip numbers
-    if (/^\d+$/.test(word)) {
-      continue;
-    }
+    if (/^\d+$/.test(word)) continue;
 
     const isCorrect = dict.check(word);
 
     if (!isCorrect) {
       const suggestions = dict.suggest(word).slice(0, 3);
-      errors.push({
-        word: word,
-        suggestions: suggestions,
-      });
+      errors.push({ word: word, suggestions: suggestions });
       misspelledWords.push(word);
     }
   }
