@@ -3,6 +3,7 @@ import GlassCard from "../components/GlassCard";
 import Navbar from "../components/Navbar";
 import BackgroundStatic from "../components/BackgroundStatic";
 import { applyTheme } from "../utils/applyTheme";
+import API_URL from "../utils/api";
 
 const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
   const [textTypes, setTextTypes] = useState([]);
@@ -18,6 +19,8 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
   const [error, setError] = useState("");
 
   const titleInputRef = useRef(null);
+  const isSavingRef = useRef(false);
+  const savedIdRef = useRef(null);
   const token = localStorage.getItem("token");
 
   const navLinks = [
@@ -32,10 +35,10 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
     const init = async () => {
       try {
         const [prefsRes, typesRes] = await Promise.all([
-          fetch("http://localhost:3000/api/preferences", {
+          fetch(`${API_URL}/api/preferences`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch("http://localhost:3000/api/texts/types", {
+          fetch(`${API_URL}/api/texts/types`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -49,12 +52,9 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
         if (types.length > 0) setTextTypeId(types[0].type_id);
 
         if (editTextId) {
-          const textRes = await fetch(
-            `http://localhost:3000/api/texts/${editTextId}`,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            },
-          );
+          const textRes = await fetch(`${API_URL}/api/texts/${editTextId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
           const textData = await textRes.json();
           setTitle(textData.title);
           setContent(textData.content);
@@ -76,28 +76,34 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
       }
     };
     init();
-  }, []);
+  }, [editTextId]);
 
   const wordCount =
     content.trim() === "" ? 0 : content.trim().split(/\s+/).length;
 
   const handleSave = async () => {
+    if (isSavingRef.current) return;
+    isSavingRef.current = true;
+
     if (!content.trim()) {
       setError("El contenido no puede estar vacío.");
+      isSavingRef.current = false;
       return;
     }
     if (!textTypeId) {
       setError("Selecciona un tipo de texto.");
+      isSavingRef.current = false;
       return;
     }
     setError("");
     setSaving(true);
     setSaveResult(null);
     try {
-      const url = editTextId
-        ? `http://localhost:3000/api/texts/${editTextId}`
-        : "http://localhost:3000/api/texts";
-      const method = editTextId ? "PUT" : "POST";
+      const resolvedId = editTextId ?? savedIdRef.current;
+      const url = resolvedId
+        ? `${API_URL}/api/texts/${resolvedId}`
+        : `${API_URL}/api/texts`
+      const method = resolvedId ? "PUT" : "POST";
       const res = await fetch(url, {
         method,
         headers: {
@@ -115,11 +121,15 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
         setError(data.error || "Error al guardar");
         return;
       }
+      if (!resolvedId && data.text?.text_id) {
+        savedIdRef.current = data.text.text_id;
+      }
       setSaveResult(data);
     } catch (err) {
       setError("Error de conexión");
     } finally {
       setSaving(false);
+      isSavingRef.current = false;
     }
   };
 
@@ -192,7 +202,16 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
               }
               title="Editar título"
             >
-              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+              <svg
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                viewBox="0 0 24 24"
+              >
                 <path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
               </svg>
             </button>
@@ -300,7 +319,16 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
                           (e.currentTarget.style.color = "var(--text-muted)")
                         }
                       >
-                        <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                        <svg
+                          width="16"
+                          height="16"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          viewBox="0 0 24 24"
+                        >
                           <path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                         </svg>
                       </button>
@@ -316,45 +344,12 @@ const NuevaEntrada = ({ onNavigate, onLogout, editTextId = null }) => {
                   >
                     Número de palabras objetivo
                   </label>
-                  {editingTarget ? (
-                    <input
-                      type="number"
-                      value={targetWords}
-                      onChange={(e) =>
-                        setTargetWords(parseInt(e.target.value) || 0)
-                      }
-                      onBlur={() => setEditingTarget(false)}
-                      onKeyDown={(e) =>
-                        e.key === "Enter" && setEditingTarget(false)
-                      }
-                      autoFocus
-                      style={inputStyle}
-                    />
-                  ) : (
-                    <div className="flex items-center justify-between">
-                      <span
-                        className="text-sm font-medium"
-                        style={{ color: "var(--text-primary)" }}
-                      >
-                        {targetWords}
-                      </span>
-                      <button
-                        onClick={() => setEditingTarget(true)}
-                        style={{ color: "var(--text-muted)" }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.color = "var(--text-primary)")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.color = "var(--text-muted)")
-                        }
-                      >
-                        <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                          <path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                        </svg>
-                      </button>
-                    </div>
-                  )}
-                  {/* Progress bar */}
+                  <span
+                    className="text-sm font-medium"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {targetWords}
+                  </span>
                   <div
                     className="w-full rounded-full overflow-hidden mt-1"
                     style={{ height: "4px", background: "var(--glass-border)" }}

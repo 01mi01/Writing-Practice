@@ -5,6 +5,7 @@ import GlassCard from "../components/GlassCard";
 import DashboardFilterBar from "../components/DashboardFilterBar";
 import AdminMetricsGrid from "../components/MetricsGrid";
 import { applyTheme } from "../utils/applyTheme";
+import API_URL from "../utils/api";
 
 const AdminDashboard = ({ onLogout }) => {
   const [metrics, setMetrics] = useState(null);
@@ -41,12 +42,9 @@ const AdminDashboard = ({ onLogout }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        `http://localhost:3000/api/admin/dashboard?${params}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      const response = await fetch(`${API_URL}/api/admin/dashboard?${params}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const data = await response.json();
       setMetrics(data);
     } catch (err) {
@@ -58,13 +56,16 @@ const AdminDashboard = ({ onLogout }) => {
 
   useEffect(() => {
     applyTheme("light", "cold");
-    fetch("http://localhost:3000/api/auth/english-levels")
+    fetch(`${API_URL}/api/auth/english-levels`)
       .then((r) => r.json())
       .then(setEnglishLevels)
       .catch(console.error);
-    fetch("http://localhost:3000/api/auth/certifications")
+    fetch(`${API_URL}/api/auth/certifications`)
       .then((r) => r.json())
-      .then(setCertifications)
+      .then((data) => {
+        console.log("certs loaded:", data);
+        setCertifications(data);
+      })
       .catch(console.error);
     fetchDashboardData(buildParams("month", "", "", "", "", [], []));
   }, []);
@@ -96,7 +97,7 @@ const AdminDashboard = ({ onLogout }) => {
 
   return (
     <div
-      className="min-h-screen relative overflow-hidden pb-16"
+      className="min-h-screen relative pb-16"
       style={{
         background:
           "linear-gradient(135deg, var(--bg-gradient-from), var(--bg-gradient-via), var(--bg-gradient-to))",

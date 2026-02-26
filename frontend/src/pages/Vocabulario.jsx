@@ -3,6 +3,7 @@ import GlassCard from "../components/GlassCard";
 import Navbar from "../components/Navbar";
 import BackgroundStatic from "../components/BackgroundStatic";
 import { applyTheme } from "../utils/applyTheme";
+import API_URL from "../utils/api";
 
 const btnStyle = {
   background: "var(--glass-bg)",
@@ -95,10 +96,10 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
     setLoading(true);
     try {
       const [prefsRes, vocabRes] = await Promise.all([
-        fetch("http://localhost:3000/api/preferences", {
+        fetch(`${API_URL}/api/preferences`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch("http://localhost:3000/api/vocabulary", {
+        fetch(`${API_URL}/api/vocabulary`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
@@ -122,7 +123,7 @@ const Vocabulario = ({ onNavigate, onLogout }) => {
     setConfirmTarget(null);
     setDeleting(id);
     try {
-      await fetch(`http://localhost:3000/api/vocabulary/${id}`, {
+      await fetch(`${API_URL}/api/vocabulary/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

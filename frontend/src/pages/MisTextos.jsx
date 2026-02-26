@@ -3,6 +3,7 @@ import GlassCard from "../components/GlassCard";
 import Navbar from "../components/Navbar";
 import BackgroundAnimated from "../components/BackgroundAnimated";
 import { applyTheme } from "../utils/applyTheme";
+import API_URL from "../utils/api";
 
 const btnStyle = {
   background: "var(--glass-bg)",
@@ -88,10 +89,10 @@ const MisTextos = ({ onNavigate, onLogout }) => {
     const fetchPrefsAndTexts = async () => {
       try {
         const [prefsRes, textsRes] = await Promise.all([
-          fetch(`http://localhost:3000/api/preferences`, {
+          fetch(`${API_URL}/api/preferences`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch(`http://localhost:3000/api/texts`, {
+          fetch(`${API_URL}/api/texts`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -116,7 +117,7 @@ const MisTextos = ({ onNavigate, onLogout }) => {
     setConfirmTarget(null);
     setDeleting(id);
     try {
-      await fetch(`http://localhost:3000/api/texts/${id}`, {
+      await fetch(`${API_URL}/api/texts/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

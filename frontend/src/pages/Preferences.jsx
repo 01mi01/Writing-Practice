@@ -3,6 +3,7 @@ import GlassCard from "../components/GlassCard";
 import Navbar from "../components/Navbar";
 import BackgroundAnimated from "../components/BackgroundAnimated";
 import { applyTheme } from "../utils/applyTheme";
+import API_URL from "../utils/api";
 
 const Preferences = ({ onNavigate, onLogout }) => {
   const [themes, setThemes] = useState([]);
@@ -26,13 +27,13 @@ const Preferences = ({ onNavigate, onLogout }) => {
     const fetchAll = async () => {
       try {
         const [themesRes, colorsRes, prefsRes] = await Promise.all([
-          fetch("http://localhost:3000/api/preferences/themes", {
+          fetch(`${API_URL}/api/preferences/themes`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch("http://localhost:3000/api/preferences/colors", {
+          fetch(`${API_URL}/api/preferences/colors`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch("http://localhost:3000/api/preferences", {
+          fetch(`${API_URL}/api/preferences`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -76,7 +77,7 @@ const Preferences = ({ onNavigate, onLogout }) => {
     setSaving(true);
     setFeedback("");
     try {
-      const res = await fetch("http://localhost:3000/api/preferences", {
+      const res = await fetch(`${API_URL}/api/preferences`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +113,7 @@ const Preferences = ({ onNavigate, onLogout }) => {
 
     setSaving(true);
     try {
-      const res = await fetch("http://localhost:3000/api/preferences", {
+      const res = await fetch(`${API_URL}/api/preferences`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

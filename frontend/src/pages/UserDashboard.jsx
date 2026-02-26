@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import BackgroundStatic from "../components/BackgroundStatic";
 import UserMetricsGrid from "../components/UserMetricsGrid";
 import { applyTheme } from "../utils/applyTheme";
+import API_URL from "../utils/api";
 
 const UserDashboard = ({ onNavigate, onLogout }) => {
   const [user, setUser] = useState(null);
@@ -28,10 +29,10 @@ const UserDashboard = ({ onNavigate, onLogout }) => {
     const fetchAll = async () => {
       try {
         const [prefsRes, dashRes] = await Promise.all([
-          fetch("http://localhost:3000/api/preferences", {
+          fetch(`${API_URL}/api/preferences`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch("http://localhost:3000/api/dashboard", {
+          fetch(`${API_URL}/api/dashboard`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);

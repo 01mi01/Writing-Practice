@@ -2,6 +2,7 @@ import { useState } from "react";
 import GlassCard from "../components/GlassCard";
 import Navbar from "../components/Navbar";
 import BackgroundAnimated from "../components/BackgroundAnimated";
+import API_URL from "../utils/api";
 
 const Login = ({ onNavigate }) => {
   const [email, setEmail] = useState("");
@@ -20,7 +21,7 @@ const Login = ({ onNavigate }) => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/login", {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

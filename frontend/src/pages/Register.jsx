@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import GlassCard from "../components/GlassCard";
 import Navbar from "../components/Navbar";
 import BackgroundAnimated from "../components/BackgroundAnimated";
+import API_URL from "../utils/api";
 
 const Register = ({ onNavigate }) => {
   const [step, setStep] = useState(1);
@@ -37,7 +38,7 @@ const Register = ({ onNavigate }) => {
   const fetchEnglishLevels = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/auth/english-levels",
+        `${API_URL}/api/auth/english-levels`,
       );
       const data = await response.json();
       setEnglishLevels(data);
@@ -49,7 +50,7 @@ const Register = ({ onNavigate }) => {
   const fetchCertifications = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/auth/certifications",
+        `${API_URL}/api/auth/certifications`,
       );
       const data = await response.json();
       setCertifications(data);
@@ -69,7 +70,7 @@ const Register = ({ onNavigate }) => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/auth/validate-step1",
+        `${API_URL}/api/auth/validate-step1`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -96,7 +97,7 @@ const Register = ({ onNavigate }) => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/register", {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

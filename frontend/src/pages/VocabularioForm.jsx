@@ -3,6 +3,7 @@ import GlassCard from "../components/GlassCard";
 import Navbar from "../components/Navbar";
 import BackgroundStatic from "../components/BackgroundStatic";
 import { applyTheme } from "../utils/applyTheme";
+import API_URL from "../utils/api";
 
 const VocabularioForm = ({ onNavigate, onLogout, editVocabId = null }) => {
   const [word, setWord] = useState("");
@@ -29,14 +30,14 @@ const VocabularioForm = ({ onNavigate, onLogout, editVocabId = null }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        const prefsRes = await fetch("http://localhost:3000/api/preferences", {
+        const prefsRes = await fetch(`${API_URL}/api/preferences`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const prefs = await prefsRes.json();
         applyTheme(prefs?.theme?.theme_name ?? "light", prefs?.color?.color_name ?? "cold");
 
         if (editVocabId) {
-          const vocabRes = await fetch(`http://localhost:3000/api/vocabulary/${editVocabId}`, {
+          const vocabRes = await fetch(`${API_URL}/api/vocabulary/${editVocabId}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           const vocabData = await vocabRes.json();
@@ -67,8 +68,8 @@ const VocabularioForm = ({ onNavigate, onLogout, editVocabId = null }) => {
 
     try {
       const url = isEditMode
-        ? `http://localhost:3000/api/vocabulary/${editVocabId}`
-        : "http://localhost:3000/api/vocabulary";
+        ? `${API_URL}/api/vocabulary/${editVocabId}`
+        : `${API_URL}/api/vocabulary`;
       const method = isEditMode ? "PUT" : "POST";
 
       const response = await fetch(url, {
