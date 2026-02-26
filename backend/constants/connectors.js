@@ -1,60 +1,177 @@
 const BASIC_CONNECTORS = ['and', 'but', 'so', 'because'];
 
 const ADVANCED_CONNECTORS = [
-  // Contrast & concession
-  'however', 'nevertheless', 'nonetheless', 'notwithstanding',
-  'whereas', 'on the other hand', 'in contrast', 'that said',
-  'even so', 'all the same', 'be that as it may', 'despite this',
-  'on the contrary', 'conversely', 'by contrast', 'yet',
-  'although', 'even though', 'in spite of this',
+  // Additive
+  'furthermore',
+  'moreover',
+  'additionally',
+  'besides',
+  'in addition',
+  'alternatively',
+  'what is more',
+  'not only that',
+  'above all',
+  'also',
+  'regarding',
+  'incidentally',
+  'by the way',
 
-  // Addition & reinforcement
-  'furthermore', 'moreover', 'additionally', 'in addition',
-  'what is more', 'not only that', 'above all', 'besides',
-  'equally important', 'coupled with this', 'alongside this',
-  'to add to this', 'on top of that',
+  // Comparative - similar
+  'likewise',
+  'similarly',
+  'in the same way',
+  'correspondingly',
+  'in a similar manner',
+  'compared with',
+  'in comparison',
 
-  // Cause & effect
-  'consequently', 'therefore', 'thus', 'as a result',
-  'hence', 'for this reason', 'as a consequence', 'accordingly',
-  'it follows that', 'this means that', 'owing to this',
+  // Comparative - dissimilar
+  'on the one hand',
+  'on the other hand',
+  'by contrast',
+  'conversely',
+  'in contrast',
 
-  // Sequence & order
-  'first of all', 'firstly', 'secondly', 'thirdly',
-  'to begin with', 'to start with', 'subsequently',
-  'following this', 'prior to this', 'at this point',
-  'eventually', 'finally', 'lastly', 'in the first place',
-  'to conclude', 'as a final point',
+  // Appositive - expository
+  'that is',
+  'in other words',
+  'in other terms',
+  'to put it differently',
+  'namely',
+  'to be more specific',
+  'in this case',
+  'in view of this',
 
-  // Clarification & exemplification
-  'for instance', 'for example', 'in particular', 'in other words',
-  'that is to say', 'to illustrate', 'namely', 'to put it differently',
-  'such as', 'as an example', 'to be more specific',
-  'in this case', 'as shown by',
+  // Appositive - exemplificatory
+  'for instance',
+  'for example',
+  'to illustrate',
+  'such as',
+  'as an example',
+  'as shown by',
+  'in particular',
+  'particularly',
+  'notably',
+  'mainly',
+  'especially',
+  'as follows',
+  'as exemplified by',
+  'including',
 
-  // Summary & conclusion
-  'in conclusion', 'to summarize', 'to sum up', 'in summary',
-  'overall', 'in short', 'in brief', 'all in all',
-  'taking everything into account', 'on balance', 'in the end',
-  'to conclude', 'in essence',
+  // Adversative
+  'even though',
+  'though',
+  'although',
+  'however',
+  'nevertheless',
+  'nonetheless',
+  'notwithstanding',
+  'despite this',
+  'all the same',
+  'in spite of this',
+  'even so',
+  'whereas',
+  'after all',
+  'even if',
 
-  // Similarity
-  'similarly', 'likewise', 'in the same way', 'by the same token',
-  'correspondingly', 'in a similar manner',
+  // Avowal
+  'in fact',
+  'as a matter of fact',
+  'actually',
+  'indeed',
 
-  // Time & simultaneity
-  'meanwhile', 'simultaneously', 'at the same time', 'in the meantime',
-  'thereafter', 'beforehand', 'in the interim',
+  // Corrective
+  'instead',
+  'rather',
+  'on the contrary',
+  'at least',
+  'or rather',
 
-  // Condition & supposition
-  'alternatively', 'otherwise', 'provided that', 'in that case',
-  'under these circumstances', 'given that', 'assuming that',
+  // Dismissive
+  'in any case',
+  'at any rate',
+  'anyhow',
+
+  // Causal - simple
+  'hence',
+  'therefore',
+  'consequently',
+  'accordingly',
+  'thus',
+
+  // Causal - emphatic
+  'as a result',
+  'in consequence',
+
+  // Causal - specific
+  'for this reason',
+  'on this basis',
+  'for this purpose',
+  'with this in mind',
+  'to this end',
+  'as a consequence',
+
+  // Conditional
+  'in that case',
+  'otherwise',
+  'under the circumstances',
+  'provided that',
+  'given that',
+  'assuming that',
   'in the event that',
 
-  // Emphasis
-  'indeed', 'in fact', 'as a matter of fact', 'undoubtedly',
-  'certainly', 'without doubt', 'it is worth noting',
-  'significantly', 'notably', 'above all',
+  // Temporal - sequential
+  'afterwards',
+  'after that',
+  'subsequently',
+  'thereupon',
+  'following this',
+  'prior to this',
+
+  // Temporal - simultaneous
+  'meanwhile',
+  'simultaneously',
+  'at the same time',
+  'in the meantime',
+
+  // Temporal - preceding
+  'previously',
+  'before that',
+  'hitherto',
+  'beforehand',
+  'thereafter',
+
+  // Temporal - ordered
+  'first of all',
+  'firstly',
+  'secondly',
+  'thirdly',
+  'to begin with',
+  'to start with',
+  'in the first place',
+  'lastly',
+
+  // Temporal - conclusive
+  'finally',
+  'at last',
+  'in the end',
+  'eventually',
+  'as a final point',
+
+  // Summary
+  'to sum up',
+  'in short',
+  'briefly',
+  'in conclusion',
+  'to conclude',
+  'to summarize',
+  'in summary',
+  'in brief',
+  'all in all',
+  'in essence',
+  'overall',
+  'on the whole',
+  'altogether',
 ];
 
 module.exports = { BASIC_CONNECTORS, ADVANCED_CONNECTORS };
