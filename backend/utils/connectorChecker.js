@@ -20,6 +20,7 @@ const countConnectors = (text) => {
       const start = match.index;
       const end = start + match[0].length;
       if (!isOverlapping(start, end)) {
+        console.log("ADVANCED (multi):", connector);
         advancedCount++;
         countedRanges.push({ start, end });
       }
@@ -35,6 +36,7 @@ const countConnectors = (text) => {
       const start = match.index;
       const end = start + match[0].length;
       if (!isOverlapping(start, end)) {
+        console.log("BASIC:", connector);
         basicCount++;
         countedRanges.push({ start, end });
       }
@@ -50,6 +52,7 @@ const countConnectors = (text) => {
       const start = match.index;
       const end = start + match[0].length;
       if (!isOverlapping(start, end)) {
+        console.log("ADVANCED (single):", connector);
         advancedCount++;
         countedRanges.push({ start, end });
       }

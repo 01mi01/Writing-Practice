@@ -77,7 +77,6 @@ const ADVANCED_CONNECTORS = [
   // Avowal
   'in fact',
   'as a matter of fact',
-  'actually',
   'indeed',
 
   // Corrective
