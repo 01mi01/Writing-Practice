@@ -66,9 +66,10 @@ const periodSelectStyle = {
 
 const fmtDate = (val, period) => {
   const d = new Date(val);
-  if (period === "year") return d.toLocaleDateString("es-ES", { year: "numeric" });
-  if (period === "week") return d.toLocaleDateString("es-ES", { day: "numeric", month: "short" });
-  return d.toLocaleDateString("es-ES", { month: "short", year: "numeric" });
+  const adjusted = new Date(d.getTime() + d.getTimezoneOffset() * 60000);
+  if (period === "year") return adjusted.toLocaleDateString("es-ES", { year: "numeric" });
+  if (period === "week") return adjusted.toLocaleDateString("es-ES", { day: "numeric", month: "short" });
+  return adjusted.toLocaleDateString("es-ES", { month: "short", year: "numeric" });
 };
 
 const UserMetricsGrid = ({ data }) => {
